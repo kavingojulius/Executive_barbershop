@@ -1,5 +1,4 @@
-
-    <!-- Header Area top bar/ navbar -->
+<!-- Header Area top bar/ navbar -->
 
     <header class="vs-header header-layout2">
 
@@ -38,26 +37,26 @@
                             <div class="row justify-content-between align-items-center gx-60">
                                 <div class="col">
                                     <div class="header-logo">
-                                        <a href="./"><img src="assets/img/logo2.png" alt="logo"></a>
+                                        <a href=".."><img src="../assets/img/logo2.png" alt="logo"></a>
                                     </div>
                                 </div>
                                 <div class="col-auto">
                                     <nav class="main-menu menu-style1 d-none d-lg-block">
                                         <ul>
                                             <li>
-                                                <a href="./">Home</a>                        
+                                                <a href="..">Home</a>                        
                                             </li>
                                             <li>
-                                                <a href="./about">About Us</a>
+                                                <a href="">About Us</a>
                                             </li>
                                             <li>                                                                                               
-                                                <a href="./service">Services</a>
+                                                <a href="service">Services</a>
                                             </li>
                                             <li>
-                                                <a href="./blog">Blog</a>                       
+                                                <a href="blog">Blog</a>                       
                                             </li>                                          
                                             <li>
-                                                <a href="./contact">Contact Us</a>
+                                                <a href="contact">Contact Us</a>
                                             </li>
                                         </ul>
                                     </nav>
@@ -65,7 +64,7 @@
                                 <div class="col-auto">
                                     <div class="header-icons">
                                         
-                                        <a href="./appointment" class="vs-btn style8 d-none d-xl-inline-block">Book</a>
+                                        <a href="appointment" class="vs-btn style8 d-none d-xl-inline-block">Book</a>
                                         <button class="bar-btn sideMenuToggler d-none d-xl-inline-block">
                                             <span class="bar"></span>
                                             <span class="bar"></span>
@@ -97,7 +96,7 @@
                         <a href="./">Home</a>                        
                     </li>
                     <li>
-                        <a href="./about">About Us</a>
+                        <a href="../pages/about.php">About Us</a>
                     </li>
                     <li>                        
                         <a href="./service">Services</a>                                                

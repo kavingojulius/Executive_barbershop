@@ -1,17 +1,17 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
 
-<?php include_once("includes/head.php")?>
+<?php include_once("../includes/head.php")?>
 
 
 <body>
 
 
-    <?php  include_once("includes/navbar.php")?>
+    <?php  include_once("../includes/navbar.php")?>
 
     <!-- Breadcumb -->
 
-    <div class="breadcumb-wrapper " data-bg-src="assets/img/breadcumb/breadcumb-bg-3.jpg">
+    <div class="breadcumb-wrapper " data-bg-src="../assets/img/breadcumb/breadcumb-bg-3.jpg">
         <div class="container z-index-common">
             <div class="breadcumb-content">
                 <h1 class="breadcumb-title">Appointment</h1>
@@ -222,33 +222,33 @@
     
     <!-- footer -->
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include '../includes/footer.php'; ?>
     
     <!-- All Js File -->
     
     <!-- Jquery -->
-    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="../assets/js/vendor/jquery-3.6.0.min.js"></script>
     <!-- jQuery UI -->
-    <script src="assets/js/jquery-ui.min.js"></script>
+    <script src="../assets/js/jquery-ui.min.js"></script>
     <!-- Slick Slider -->
-    <script src="assets/js/slick.min.js"></script>
+    <script src="../assets/js/slick.min.js"></script>
     <!-- <script src="assets/js/app.min.js"></script> -->
 
     <!-- Bootstrap -->
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
     <!-- Parallax Scroll -->
-    <script src="assets/js/universal-parallax.min.js"></script>
+    <script src="../assets/js/universal-parallax.min.js"></script>
     <!-- Wow.js Animation -->
-    <script src="assets/js/wow.min.js"></script>
+    <script src="../assets/js/wow.min.js"></script>
     <!-- jQuery Datepicker -->
-    <script src="assets/js/jquery.datetimepicker.min.js"></script>
+    <script src="../assets/js/jquery.datetimepicker.min.js"></script>
     <!-- Magnific Popup -->
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="../assets/js/jquery.magnific-popup.min.js"></script>
     <!-- Isotope Filter -->
-    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="assets/js/isotope.pkgd.min.js"></script>
+    <script src="../assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="../assets/js/isotope.pkgd.min.js"></script>
     <!-- Main Js File -->
-    <script src="assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 
 
 </body>

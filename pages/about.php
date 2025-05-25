@@ -1,16 +1,15 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
 
-<?php include_once("includes/head.php")?>
+<?php include '../includes/head.php'; ?>
 
 <body>
-
-    <?php  include_once("includes/navbar.php")?>
     
+    <?php include '../includes/navbar.php'; ?>
     
     <!-- Breadcumb -->
 
-    <div class="breadcumb-wrapper " data-bg-src="assets/img/breadcumb/breadcumb-bg-2.jpg">
+    <div class="breadcumb-wrapper " data-bg-src="../assets/img/breadcumb/breadcumb-bg-2.jpg">
         <div class="container z-index-common">
             <div class="breadcumb-content">
                 <h1 class="breadcumb-title">About Us</h1>
@@ -27,16 +26,16 @@
     <!-- About Area -->
     
     <section class=" space-top space-extra-bottom">
-        <div class="shape-mockup jump-img d-none d-xl-block" data-left="34%" data-bottom="1%"><img src="assets/img/shape/leaf-1-6.png" alt="shape"></div>
+        <div class="shape-mockup jump-img d-none d-xl-block" data-left="34%" data-bottom="1%"><img src="../assets/img/shape/leaf-1-6.png" alt="shape"></div>
         <div class="container">
             
             <div class="row gx-80 align-items-center">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.2s">
                     <div class="img-box2">
                         <div class="img-1">
-                            <img src="assets/img/about/ab-2-1.jpg" alt="about">
+                            <img src="../assets/img/about/ab-2-1.jpg" alt="about">
                         </div>
-                        <div class="img-2 jump"><img src="assets/img/shape/leaf-1-3.png" alt="shape"></div>
+                        <div class="img-2 jump"><img src="../assets/img/shape/leaf-1-3.png" alt="shape"></div>
                         <div class="img-shape">
                             <span class="img-text jump-reverse">Feature</span>
                         </div>
@@ -133,40 +132,40 @@
             <div class="title-area text-center wow fadeInUp" data-wow-delay="0.2s">
                 <span class="sec-subtitle">our Members</span>
                 <h2 class="sec-title">Expert Beautician</h2>
-                <div class="sec-shape"><img src="assets/img/shape/sec-shape-1.png" alt="shape"></div>
+                <div class="sec-shape"><img src="../assets/img/shape/sec-shape-1.png" alt="shape"></div>
             </div>
             <div class="row vs-carousel" data-arrows="true" data-slide-show="4" data-lg-slide-show="3" data-md-slide-show="2">
                 <div class="col-xl-3  ">
                     <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-1.png" alt="member"></a></div>
+                        <div class="team-img"><a href="team-details.html"><img src="../assets/img/team/team-1-1.png" alt="member"></a></div>
                         <h3 class="team-name h4"><a href="team-details.html">Lenda Murray</a></h3>
                         <p class="team-degi">Founder & CEO</p>
                     </div>
                 </div>
                 <div class="col-xl-3  ">
                     <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-2.png" alt="member"></a></div>
+                        <div class="team-img"><a href="team-details.html"><img src="../assets/img/team/team-1-2.png" alt="member"></a></div>
                         <h3 class="team-name h4"><a href="team-details.html">Emely jonson</a></h3>
                         <p class="team-degi">Manicure Expart</p>
                     </div>
                 </div>
                 <div class="col-xl-3  ">
                     <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-3.png" alt="member"></a></div>
+                        <div class="team-img"><a href="team-details.html"><img src="../assets/img/team/team-1-3.png" alt="member"></a></div>
                         <h3 class="team-name h4"><a href="team-details.html">Arika Murray</a></h3>
                         <p class="team-degi">Beautician</p>
                     </div>
                 </div>
                 <div class="col-xl-3  ">
                     <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-4.png" alt="member"></a></div>
+                        <div class="team-img"><a href="team-details.html"><img src="../assets/img/team/team-1-4.png" alt="member"></a></div>
                         <h3 class="team-name h4"><a href="team-details.html">Lola Jonson</a></h3>
                         <p class="team-degi">Spa Specialist</p>
                     </div>
                 </div>
                 <div class="col-xl-3  ">
                     <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-5.png" alt="member"></a></div>
+                        <div class="team-img"><a href="team-details.html"><img src="../assets/img/team/team-1-5.png" alt="member"></a></div>
                         <h3 class="team-name h4"><a href="team-details.html">Rose Marian</a></h3>
                         <p class="team-degi">Massage Expert</p>
                     </div>
@@ -177,34 +176,34 @@
 
     <!-- footer -->
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include '../includes/footer.php'; ?>
 
     
     <!-- All Js File -->
     
     <!-- Jquery -->
-    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="../assets/js/vendor/jquery-3.6.0.min.js"></script>
     <!-- jQuery UI -->
-    <script src="assets/js/jquery-ui.min.js"></script>
+    <script src="../assets/js/jquery-ui.min.js"></script>
     <!-- Slick Slider -->
-    <script src="assets/js/slick.min.js"></script>
+    <script src="../assets/js/slick.min.js"></script>
     <!-- <script src="assets/js/app.min.js"></script> -->
 
     <!-- Bootstrap -->
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
     <!-- Parallax Scroll -->
-    <script src="assets/js/universal-parallax.min.js"></script>
+    <script src="../assets/js/universal-parallax.min.js"></script>
     <!-- Wow.js Animation -->
-    <script src="assets/js/wow.min.js"></script>
+    <script src="../assets/js/wow.min.js"></script>
     <!-- jQuery Datepicker -->
-    <script src="assets/js/jquery.datetimepicker.min.js"></script>
+    <script src="../assets/js/jquery.datetimepicker.min.js"></script>
     <!-- Magnific Popup -->
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="../assets/js/jquery.magnific-popup.min.js"></script>
     <!-- Isotope Filter -->
-    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="assets/js/isotope.pkgd.min.js"></script>
+    <script src="../assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="../assets/js/isotope.pkgd.min.js"></script>
     <!-- Main Js File -->
-    <script src="assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 
 
 </body>
