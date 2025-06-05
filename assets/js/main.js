@@ -2,35 +2,7 @@
   ("use strict");
   /*=================================
       JS Index Here
-  ==================================*/
-  /*
-    01. On Load Function
-    02. Preloader
-    03. Mobile Menu Active
-    04. Sticky fix
-    05. Scroll To Top
-    06. Set Background Image
-    07. Global Slider
-    08. Ajax Contact Form
-    09. Magnific Popup
-    10. Filter
-    11. Popup Sidemenu   
-    12. Search Box Popup
-    13. Woocommerce Toggle
-    14. Quantity Added
-    15. Shape Mockup
-    16. Range Slider
-    17. WOW.js Animation
-    18. Hero Slider Active
-    19. Testimonial Slider
-    20. Date & Time Picker
-    21. Accordion Class Toggler
-    22. Parallax Effect
-  */
-  /*=================================
-      JS Index End
-  ==================================*/
-  /*
+  ==================================*/     
 
   /*---------- 01. On Load Function ----------*/
   $(window).on("load", function () {
@@ -877,6 +849,48 @@
   $(".accordion-button").on("click", function () {
     let btn = $(this).closest(".accordion-item");
     btn.toggleClass("active").siblings().removeClass("active");
+  });
+
+  
+// for displaying contact form messages success or error 
+  $(document).ready(function() {
+    $('.ajax-contact').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var formMessages = $('.form-messages');
+        
+        // Clear and reset message area
+        formMessages.removeClass('success error').html('');
+        
+        // Show loading state if needed
+        formMessages.html('Sending message...').addClass('info');
+        
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            dataType: 'json',
+            success: function(response) {
+                // Always display the message property
+                formMessages.html(response.message);
+                
+                if (response.status === 'success') {
+                    formMessages.addClass('success').removeClass('error info');
+                    form[0].reset(); // Reset the form
+                } else {
+                    formMessages.addClass('error').removeClass('success info');
+                }
+            },
+            error: function(xhr, status, error) {
+                var errorMessage = 'An error occurred while sending the message. Please try again.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                formMessages.html(errorMessage).addClass('error').removeClass('success info');
+                console.error('AJAX Error:', status, error, xhr.responseText);
+              }
+          });
+      });
   });
 
 

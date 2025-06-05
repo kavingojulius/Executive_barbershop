@@ -1,6 +1,4 @@
-
-<?php require_once './includes/header.php'; ?>
-
+<?php include '../includes/header.php'; ?>
 <h2>Welcome to the Dashboard</h2>
 
 <div class="row g-4 mt-4">
@@ -38,4 +36,4 @@
         <a href="staff.php" class="btn btn-outline-dark">Manage Staff</a>
     </div>
 </div>
-<?php include './includes/footer.php'; ?>
+<?php include '../includes/footer.php'; ?>

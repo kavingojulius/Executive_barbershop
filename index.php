@@ -137,24 +137,24 @@
         <div class="vs-menu-area text-center">
             <button class="vs-menu-toggle"><i class="fal fa-times"></i></button>
             <div class="mobile-logo">
-                <a href=""><img src="assets/img/logo.svg" alt="KING'S EXECUTIVE Barbershop & SPA"></a>
+                <a href=""><img src="assets/img/logo2.png" alt="KING'S EXECUTIVE Barbershop & SPA"></a>
             </div>
             <div class="vs-mobile-menu">
                 <ul>
                     <li>
-                        <a href="/">Home</a>                        
+                        <a href="">Home</a>                        
                     </li>
                     <li>
-                        <a href="pages/rabout.php">About Us</a>
+                        <a href="pages/about">About Us</a>
                     </li>
                     <li>                        
-                        <a href="./service">Services</a>                                                
+                        <a href="pages/service">Services</a>                                                
                     </li>
                     <li>
-                        <a href="./blog">Blog</a>                       
+                        <a href="pages/blog">Blog</a>                       
                     </li>                                          
                     <li>
-                        <a href="./contact">Contact Us</a>
+                        <a href="pages/contact">Contact Us</a>
                     </li>
                 </ul>
             </div>
@@ -170,7 +170,7 @@
             <button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
             <div class="widget  ">
                 <div class="footer-logo">
-                    <img src="assets/img/logo.svg" alt="logo">
+                    <img src="assets/img/logo2.png" alt="logo">
                 </div>
                 <div class="info-media1">
                     <div class="media-icon"><i class="fal fa-map-marker-alt"></i></div>
@@ -195,7 +195,7 @@
                         <div class="media-body">
                             <h4 class="post-title"><a class="text-inherit" href="blog-details.html">Skinscent Experience Oskarsson</a></h4>
                             <div class="recent-post-meta">
-                                <a href="./blog"><i class="fas fa-calendar-alt"></i>march 10, 2023</a>
+                                <a href="pages/blog"><i class="fas fa-calendar-alt"></i>march 10, 2023</a>
                             </div>
                         </div>
                     </div>
@@ -206,7 +206,7 @@
                         <div class="media-body">
                             <h4 class="post-title"><a class="text-inherit" href="blog-details.html">Lorem ipsum is placeholder recent popular</a></h4>
                             <div class="recent-post-meta">
-                                <a href="./blog"><i class="fas fa-calendar-alt"></i>Augest 10, 2023</a>
+                                <a href="pages/blog"><i class="fas fa-calendar-alt"></i>Augest 10, 2023</a>
                             </div>
                         </div>
                     </div>
@@ -217,7 +217,7 @@
                         <div class="media-body">
                             <h4 class="post-title"><a class="text-inherit" href="blog-details.html">From its medieval origins health custom</a></h4>
                             <div class="recent-post-meta">
-                                <a href="./blog"><i class="fas fa-calendar-alt"></i>July 11, 2023</a>
+                                <a href="pages/blog"><i class="fas fa-calendar-alt"></i>July 11, 2023</a>
                             </div>
                         </div>
                     </div>
@@ -228,7 +228,7 @@
                         <div class="media-body">
                             <h4 class="post-title"><a class="text-inherit" href="blog-details.html">Letraset's dry-transfer sheets later</a></h4>
                             <div class="recent-post-meta">
-                                <a href="./blog"><i class="fas fa-calendar-alt"></i>March 05, 2023</a>
+                                <a href="pages/blog"><i class="fas fa-calendar-alt"></i>March 05, 2023</a>
                             </div>
                         </div>
                     </div>
