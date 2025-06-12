@@ -852,44 +852,11 @@
   });
 
   
-// for displaying contact form messages success or error 
   $(document).ready(function() {
-    $('.ajax-contact').on('submit', function(e) {
-        e.preventDefault();
-        var form = $(this);
-        var formMessages = $('.form-messages');
-        
-        // Clear and reset message area
-        formMessages.removeClass('success error').html('');
-        
-        // Show loading state if needed
-        formMessages.html('Sending message...').addClass('info');
-        
-        $.ajax({
-            url: form.attr('action'),
-            type: 'POST',
-            data: form.serialize(),
-            dataType: 'json',
-            success: function(response) {
-                // Always display the message property
-                formMessages.html(response.message);
-                
-                if (response.status === 'success') {
-                    formMessages.addClass('success').removeClass('error info');
-                    form[0].reset(); // Reset the form
-                } else {
-                    formMessages.addClass('error').removeClass('success info');
-                }
-            },
-            error: function(xhr, status, error) {
-                var errorMessage = 'An error occurred while sending the message. Please try again.';
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                }
-                formMessages.html(errorMessage).addClass('error').removeClass('success info');
-                console.error('AJAX Error:', status, error, xhr.responseText);
-              }
-          });
+      // Show "Sending..." on form submission
+      $('.form-style6').on('submit', function() {
+          var submitButton = $(this).find('#submit-btn');
+          submitButton.prop('disabled', true).text('Sending...');
       });
   });
 
