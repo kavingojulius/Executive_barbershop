@@ -113,7 +113,7 @@
                                 <div class="col-auto">
                                     <div class="header-icons">
                                         
-                                        <a href="appointment" class="vs-btn style8 d-none d-xl-inline-block">Book</a>
+                                        <a href="pages/appointment" class="vs-btn style8 d-none d-xl-inline-block">Book</a>
                                         <button class="bar-btn sideMenuToggler d-none d-xl-inline-block">
                                             <span class="bar"></span>
                                             <span class="bar"></span>

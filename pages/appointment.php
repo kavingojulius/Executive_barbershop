@@ -1,8 +1,74 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
 
-<?php include_once("../includes/head.php")?>
 
+<?php 
+session_start();
+include_once("../includes/head.php");
+
+// Include database configuration
+include_once("../config/db.php");
+
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize and validate input
+    $name = filter_var($_POST['name'] ?? '', FILTER_SANITIZE_STRING);
+    $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+    $number = filter_var($_POST['phone_number'] ?? '', FILTER_SANITIZE_STRING);
+    $date = filter_var($_POST['appointment_date'] ?? '', FILTER_SANITIZE_STRING);
+    $subject = filter_var($_POST['subject'] ?? '', FILTER_SANITIZE_STRING);
+
+    $errors = [];
+    if (empty($name)) {
+        $errors[] = 'Name is required';
+    }
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'Valid email is required';
+    }
+    if (empty($number)) {
+        $errors[] = 'Phone number is required';
+    }
+    if (empty($date)) {
+        $errors[] = 'Date is required';
+    }
+    if (empty($subject)) {
+        $errors[] = 'Subject is required';
+    }
+
+    if (empty($errors)) {
+        // Insert into appointments
+        $stmt = $conn->prepare("INSERT INTO appointment_requests (name, email, phone_number, appointment_date, subject) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $name, $email, $number, $date, $subject);
+
+        if ($stmt->execute()) {
+            $_SESSION['message'] = ['type' => 'success', 'text' => 'Your appointment has been booked successfully!'];
+        } else {
+            $_SESSION['message'] = ['type' => 'danger', 'text' => 'Failed to book appointment. Please try again.'];
+        }
+        $stmt->close();
+        $conn->close();
+    } else {
+        $_SESSION['message'] = ['type' => 'danger', 'text' => implode('<br>', $errors)];
+    }
+
+    // Redirect to avoid form resubmission and PHP output
+    header("Location: appointment.php");
+    exit;
+}
+
+
+?>
+
+<style>
+    .form-messages .text-success {
+        color: green;
+        font-weight: bold;
+    }
+    .form-messages .text-danger {
+        color: red;
+        font-weight: bold;
+    }
+</style>
 
 <body>
 
@@ -33,7 +99,17 @@
         <div class="container">
             <div class="row gx-60">
                 <div class="col-xl-5 mb-40 mb-xl-0 pb-20 pb-xl-0 wow fadeInUp" data-wow-delay="0.2s">
-                    <form action="appointment-mail.php" class="form-style2   appointment-form">
+
+                    <p class="form-messages">
+                        <?php
+                        if (isset($_SESSION['message'])) {
+                            echo '<span class="text-' . $_SESSION['message']['type'] . '">' . $_SESSION['message']['text'] . '</span>';
+                            unset($_SESSION['message']); // Clear message after displaying
+                        }
+                        ?>
+                    </p>
+
+                    <form action="" class="form-style2   appointment-form">
                         <h2 class="form-title">Book Appointment</h2>
                         <p class="form-label">Today For Free</p>
                         <div class="form-group">
@@ -43,25 +119,18 @@
                             <input type="email" name="email" id="email" placeholder="Email Address">
                         </div>
                         <div class="form-group">
-                            <input type="number" name="number" id="number" placeholder="Phone Number">
+                            <input type="tel" name="phone_number" id="number" placeholder="Phone Number">
                         </div>
                         <div class="form-group">
-                            <input type="text" name="date" id="date" autocomplete="off" class="form-control dateTime-pick" placeholder="Select Date">
+                            <input type="text" name="appointment_date" id="date" autocomplete="off" class="form-control dateTime-pick" placeholder="Select Date">
                         </div>
                         <div class="form-group">
-                            <select name="subject" id="subject">
-                                <option disabled hidden selected>Select Subject</option>
-                                <option>Sports Massage</option>
-                                <option>Stone Massage</option>
-                                <option>Head Massage</option>
-                                <option>Head Massage</option>
-                                <option>Facial &amp; Massage</option>
-                            </select>
+                            <input type="text" name="subject" id="subject"  class="form-control " placeholder="Input your subject">                            
                         </div>
                         <div class="form-group">
                             <button class="vs-btn" type="submit">Make Appointment</button>
                         </div>
-                        <p class="form-messages"></p>
+                        <!-- <p class="form-messages"></p> -->
                     </form>
                 </div>
                 <div class="col-xl-7 wow fadeInUp" data-wow-delay="0.3s">
@@ -84,136 +153,6 @@
                         <div class="col-md-5 mb-30">
                             <img src="assets/img/about/appoin-1-1.jpg" alt="about" class="w-100">
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!--==============================
-    Price Plan Area
-    ==============================-->
-    <section class=" space">
-        <div class="parallax" data-parallax-image="assets/img/bg/price-bg-2-1.jpg"></div>
-        <div class="container">
-            <div class="row flex-row-reverse gx-55">
-                <div class="col-md-6 col-lg-6 col-xl-4 col-xxl align-self-end mb-40 mb-md-0 wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="img-box3 style2">
-                        <div class="shape-line">
-                            <svg viewBox="0 0 442 357">
-                                <path class="shape-line" d="M220.6 3C339.98 3 437.1 100.12 437.1 219.5V351.99H440.1V219.5C440.1 160.87 417.27 105.75 375.81 64.29C334.35 22.83 279.23 0 220.6 0C161.97 0 106.85 22.83 65.39 64.29C28.67 101.01 6.57 148.46 2 199.56H5.02C15.12 89.5 107.94 3 220.6 3Z" />
-                                <path class="shape-dot" d="M7 198.5C7 200.433 5.433 202 3.5 202C1.567 202 0 200.433 0 198.5C0 196.567 1.567 195 3.5 195C5.433 195 7 196.567 7 198.5Z" />
-                                <path class="shape-dot" d="M442 353.5C442 355.433 440.433 357 438.5 357C436.567 357 435 355.433 435 353.5C435 351.567 436.567 350 438.5 350C440.433 350 442 351.567 442 353.5Z" />
-                            </svg>
-                        </div>
-                        <div class="text-shape">
-                            <svg viewBox="0 0 408 579">
-                                <path id="textboxpath2" d="M0 204C0 91.3339 91.3339 0 204 0V0C316.666 0 408 91.3339 408 204V316.879V375C408 487.666 316.666 579 204 579V579C91.3339 579 0 487.666 0 375V204Z"></path>
-                                <text>
-                                    <textPath href="#textboxpath2" startOffset="810">Onsectttur adipiscung</textPath>
-                                </text>
-                            </svg>
-                        </div>
-                        <div class="img-product">
-                            <a href="shop-details.html"><img src="assets/img/about/price-2-1-1.png" alt="about"></a>
-                            <p class="product-title"><a href="shop-details.html" class="text-inherit">face vitamin</a></p>
-                            <p class="product-price">$12.00</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-xl-8 col-xxl-auto wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="title-area text-center text-md-start">
-                        <span class="text-white sec-subtitle">Experience Wellnez <span class="sec-subtext bg-theme">25 Years</span></span>
-                        <h2 class="text-white sec-title">Perfect Package</h2>
-                    </div>
-                    <div class="price-inner2">
-                        <div class="row vs-carousel" data-slide-show="2" data-lg-slide-show="1">
-                            <div class="col-lg-6">
-                                <div class="package-style1">
-                                    <div class="package-top">
-                                        <div class="package-left">
-                                            <p class="package-price">12<span class="currency">$</span></p>
-                                            <p class="package-duration">Billed Monthly</p>
-                                        </div>
-                                        <h3 class="package-name">Basic Plan</h3>
-                                    </div>
-                                    <div class="package-shape"><img src="assets/img/shape/price-shape-2.png" alt="shape"></div>
-                                    <div class="package-list">
-                                        <ul class="list-unstyled">
-                                            <li><span class="text-title">Mobile-Optimized</span></li>
-                                            <li>Free Custom Domain</li>
-                                            <li>Best Hosting</li>
-                                            <li>Max Makup</li>
-                                            <li>Outstanding Support</li>
-                                            <li>Happy Customers</li>
-                                        </ul>
-                                    </div>
-                                    <div class="package-btn">
-                                        <a href="contact.html" class="vs-btn style3">Book Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="package-style1">
-                                    <div class="package-top">
-                                        <div class="package-left">
-                                            <p class="package-price">29<span class="currency">$</span></p>
-                                            <p class="package-duration">Billed Yearly</p>
-                                        </div>
-                                        <h3 class="package-name">Mega Plan</h3>
-                                    </div>
-                                    <div class="package-shape"><img src="assets/img/shape/price-shape-2.png" alt="shape"></div>
-                                    <div class="package-list">
-                                        <ul class="list-unstyled">
-                                            <li><span class="text-title">Mobile-Optimized</span></li>
-                                            <li>Free Custom Domain</li>
-                                            <li>Best Hosting</li>
-                                            <li>Max Makup</li>
-                                            <li>Outstanding Support</li>
-                                            <li>Happy Customers</li>
-                                        </ul>
-                                    </div>
-                                    <div class="package-btn">
-                                        <a href="contact.html" class="vs-btn style3">Book Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!--==============================
-    Testimonial Area
-    ==============================-->
-    <section class=" space">
-        <div class="parallax" data-parallax-image="assets/img/bg/testi-bg-2-1.jpg"></div>
-        <div class="shape-mockup jump-reverse d-none d-xxl-block" data-top="12%" data-right="6%"><img src="assets/img/shape/leaf-1-1.png" alt="shape"></div>
-        <div class="shape-mockup jump  d-none d-xxl-block" data-top="35%" data-left="17.5%"><img src="assets/img/shape/leaf-1-8.png" alt="shape"></div>
-        <div class="container">
-            <div class="title-area text-center">
-                <span class="sec-subtitle">client testimonial</span>
-                <h2 class="sec-title">Wellnez Customers</h2>
-            </div>
-            <div class="pb-1px"></div>
-            <div class="testi-style2">
-                <span class="vs-icon"><img src="assets/img/icon/quote-1-1.png" alt="icon"></span>
-                <div class="vs-carousel" data-slide-show="1" data-fade="true" data-arrows="true" data-ml-arrows="true" data-xl-arrows="true" data-lg-arrows="true" data-prev-arrow="fal fa-long-arrow-left" data-next-arrow="fal fa-long-arrow-right">
-                    <div>
-                        <p class="testi-text">“We think your skin should look and refshed matter Nourish your outer inner beauty with our essential oil infused beauty products”</p>
-                        <div class="arrow-shape"><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i></div>
-                        <h3 class="testi-name h5">Thomas Muller</h3>
-                        <span class="testi-degi">CEO, SPATHINK</span>
-                    </div>
-                    <div>
-                        <p class="testi-text">“From its medieval origins to the digital era, learn everything there is to know about the ubiquitous lorem ipsum passage known”</p>
-                        <div class="arrow-shape"><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i></div>
-                        <h3 class="testi-name h5">William Shak</h3>
-                        <span class="testi-degi">Manager, LDC</span>
-                    </div>
-                    <div>
-                        <p class="testi-text">“Creation timelines for the standard lorem ipsum passage vary, with some citing the 15th century and others the part of Cicero”</p>
-                        <div class="arrow-shape"><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i></div>
-                        <h3 class="testi-name h5">Vivi Marian</h3>
-                        <span class="testi-degi">Customer</span>
                     </div>
                 </div>
             </div>

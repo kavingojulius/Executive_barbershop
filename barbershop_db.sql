@@ -78,4 +78,18 @@ CREATE TABLE contact_messages (
     INDEX idx_email (email)
 )
 
+-- appointment requests
+CREATE TABLE appointment_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    appointment_date DATETIME NOT NULL,
+    subject VARCHAR(100) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_email (email),
+    INDEX idx_appointment_date (appointment_date)
+);CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
 
