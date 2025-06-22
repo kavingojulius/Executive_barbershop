@@ -56,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include_once("../includes/navbar.php") ?>
 
     <!-- Breadcrumb -->
+     
     <div class="breadcumb-wrapper" data-bg-src="../assets/img/breadcumb/breadcumb-bg-4.jpg">
         <div class="container z-index-common">
             <div class="breadcumb-content">
@@ -71,15 +72,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <!-- Contact Form Area -->
+
     <section class="space">
         <div class="container">
             <div class="row gx-70">
                 <div class="col-lg-6 mb-40 mb-lg-0 wow fadeInUp" data-wow-delay="0.2s">
                     <div class="text-center text-lg-start">
-                        <span class="sec-subtitle">Experience</span>
-                        <h2 class="sec-title3 h1 text-uppercase mb-xxl-2 pb-xxl-1">Get in <span class="text-theme">Touch</span></h2>
+                        <span class="sec-subtitle">Connect with Us</span>
+                        <h2 class="sec-title3 h1 text-uppercase mb-xxl-2 pb-xxl-1">Contact Our <span class="text-theme">Barbershop</span></h2>
                         <div class="col-xxl-10 pb-xl-3" id="cntf">
-                            <p class="pe-xxl-4">We think your skin should look and refreshed matter Nourish your outer inner beauty with our essential</p>
+                            <p class="pe-xxl-4">Have questions about our services, want to book an appointment, or just say hello? Fill out the form below, and we'll get back to you as soon as possible.</p>
                         </div>
                     </div>
 
@@ -100,17 +102,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="email" name="email" id="email" placeholder="Your Email*">
                         </div>
                         <div class="form-group">
-                            <select name="subject" id="subject">
-                                <option value="" selected disabled hidden>Subject*</option>
-                                <option value="Skin Care">Skin Care</option>
-                                <option value="Beauty Makeup">Beauty Makeup</option>
-                                <option value="Body Massage">Body Massage</option>
-                                <option value="Skin Checkup">Skin Checkup</option>
-                                <option value="Others">Others</option>
-                            </select>
+                            <input type="text" name="subject" id="subject"  class="form-control " placeholder="Service to book* (e.g., Haircut, Beard Trim, Styling)">                            
                         </div>
                         <div class="form-group">
-                            <textarea name="message" id="message" placeholder="Message*"></textarea>
+                            <textarea name="message" id="message" placeholder="Tell us more about your service request*"></textarea>
                         </div>
                         <button class="vs-btn" type="submit" id="submit-btn">Send Message</button>
                         <p class="form-messages"></p>
@@ -125,22 +120,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="tr">
                             <div class="tb-col">
                                 <span class="th">Address :</span>
-                                <span class="td">Centerl Park West LA87, New York</span>
+                                <span class="td">Levo Petrol Station, next to Club Step Two, Embu</span>
                             </div>
                         </div>
                         <div class="tr">
                             <div class="tb-col">
                                 <span class="th">email :</span>
-                                <span class="td"><a href="mailto:info@example.com" class="text-inherit">info@example.com</a></span>
+                                <span class="td"><a href="kings2023@gmail.com" class="text-inherit">kings2023@gmail.com</a></span>
                             </div>
                             <div class="tb-col">
                                 <span class="th">time : </span>
-                                <span class="td">16 : 00 - 19 : 00</span>
+                                <span class="td">08 : 00 - 19 : 00</span>
                             </div>
                         </div>
                     </div>
-                    <span class="h1">
-                        <a href="tel:+1222999408" class="text-inherit"><i class="fal fa-headset me-3 text-theme"></i>+1 222 999 408</a>
+                    <span class="h4">
+                        <i class="fal fa-headset me-3 text-theme"></i>
+                        <a href="tel:0704843035" class="text-inherit">0704843035</a> 
+                            /
+                        <a href="tel:0727656828" class="text-inherit">0727656828</a>
                     </span>
                 </div>
             </div>
@@ -148,19 +146,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </section>
 
     <!-- Footer -->
-    <?php include '../includes/footer.php'; ?>
+    <?php include '../includes/footer1.php'; ?>
 
-    <!-- All JS Files -->
-    <script src="../assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="../assets/js/jquery-ui.min.js"></script>
-    <script src="../assets/js/slick.min.js"></script>
-    <script src="../assets/js/bootstrap.min.js"></script>
-    <script src="../assets/js/universal-parallax.min.js"></script>
-    <script src="../assets/js/wow.min.js"></script>
-    <script src="../assets/js/jquery.datetimepicker.min.js"></script>
-    <script src="../assets/js/jquery.magnific-popup.min.js"></script>
-    <script src="../assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="../assets/js/isotope.pkgd.min.js"></script>
-    <script src="../assets/js/main.js"></script>
+   
 </body>
 </html>

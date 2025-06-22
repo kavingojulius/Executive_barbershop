@@ -156,6 +156,9 @@
                     <li>
                         <a href="pages/contact">Contact Us</a>
                     </li>
+                    <li>
+                        <a href="pages/appointment">Book</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -169,20 +172,20 @@
         <div class="sidemenu-content">
             <button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
             <div class="widget  ">
-                <div class="footer-logo">
-                    <img src="assets/img/logo2.png" alt="logo">
+                <div class="mobile-logo">
+                    <a href=""><img src="assets/img/logo2.png" alt="KING'S EXECUTIVE Barbershop & SPA"></a>
                 </div>
                 <div class="info-media1">
                     <div class="media-icon"><i class="fal fa-map-marker-alt"></i></div>
-                    <span class="media-label">Centerl Park West La, New York</span>
+                    <span class="media-label">Levo Petrol Station, next to Club Step Two, Embu</span>
                 </div>
                 <div class="info-media1">
                     <div class="media-icon"><i class="far fa-phone-alt "></i></div>
-                    <span class="media-label"><a href="tel:+01234567890" class="text-inherit">+0 123 456 7890</a></span>
+                    <span class="media-label"><a href="tel:+254704843035" class="text-inherit"> +254704843035</a></span>
                 </div>
                 <div class="info-media1">
                     <div class="media-icon"><i class="fal fa-envelope"></i></div>
-                    <span class="media-label"><a class="text-inherit" href="mailto:info@example.com">info@example.com</a></span>
+                    <span class="media-label"><a class="text-inherit" href="kings2023@gmail.com">kings2023@gmail.com</a></span>
                 </div>
             </div>
             <div class="widget  ">
@@ -235,8 +238,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
 
+
+    
     
     <!-- Hero Area -->
 
@@ -944,33 +949,10 @@
             </div>
         </div>
     </section>    
-
-    <?php include 'includes/footer.php'; ?>
-
-        
+            
     <!-- All Js Files -->
 
-    <!-- Jquery -->
-    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <!-- jQuery UI -->
-    <script src="assets/js/jquery-ui.min.js"></script>
-    <!-- Slick Slider -->
-    <script src="assets/js/slick.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Parallax Scroll -->
-    <script src="assets/js/universal-parallax.min.js"></script>
-    <!-- Wow.js Animation -->
-    <script src="assets/js/wow.min.js"></script>
-    <!-- jQuery Datepicker -->
-    <script src="assets/js/jquery.datetimepicker.min.js"></script>
-    <!-- Magnific Popup -->
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <!-- Isotope Filter -->
-    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="assets/js/isotope.pkgd.min.js"></script>
-    <!-- Main Js File -->
-    <script src="assets/js/main.js"></script>
+    <?php include './includes/footer2.php'; ?>
 
 </body>
 

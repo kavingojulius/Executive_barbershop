@@ -24,10 +24,10 @@
                             <h3 class="widget_title">Important Links</h3>
                             <div class="menu-all-pages-container footer-menu">
                                 <ul class="menu">
-                                    <li><a href="service.php">Services</a></li>
-                                    <li><a href="about.php">About Us</a></li>                                    
-                                    <li><a href="contact.php">Contact</a></li>
-                                    <li><a href="blog.php">Our Blog</a></li>
+                                    <li><a href="./pages/service">Services</a></li>
+                                    <li><a href="./pages/about">About Us</a></li>                                    
+                                    <li><a href="./pages/contact">Contact</a></li>
+                                    <li><a href="./pages/blog">Our Blog</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -38,11 +38,11 @@
                             <h3 class="widget_title">Categories</h3>
                             <div class="menu-all-pages-container footer-menu">
                                 <ul class="menu">
-                                    <li><a href="service.html">Haircuts & Shaves</a></li>
-                                    <!-- <li><a href="service.html">Shaves</a></li> -->
-                                    <li><a href="service.html">Spa Treatments</a></li>
-                                    <li><a href="service.html">Hair Coloring</a></li>
-                                    <li><a href="service.html">Massages</a></li>
+                                    <li><a href="./pages/service">Haircuts & Shaves</a></li>
+                                    <!-- <li><a href="./pages/service.html">Shaves</a></li> -->
+                                    <li><a href="./pages/service">Spa Treatments</a></li>
+                                    <li><a href="./pages/service">Hair Coloring</a></li>
+                                    <li><a href="./pages/service">Massages</a></li>
                                 </ul>
                             </div> 
                         </div>
@@ -85,3 +85,18 @@
     <!-- Scroll To Top -->
     
     <a href="#" class="scrollToTop scroll-btn"><i class="far fa-arrow-up"></i></a>
+
+    <!-- All JS Files -->
+    <script src="./assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="./assets/js/jquery-ui.min.js"></script>
+    <script src="./assets/js/slick.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/universal-parallax.min.js"></script>
+    <script src="./assets/js/wow.min.js"></script>
+    <script src="./assets/js/jquery.datetimepicker.min.js"></script>
+    <script src="./assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="./assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="./assets/js/isotope.pkgd.min.js"></script>
+    <script src="./assets/js/main.js"></script>
+
+    
