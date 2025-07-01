@@ -1,3 +1,15 @@
+<?php
+// Include database connection at the top of your index.php
+include 'config/db.php';
+
+// Fetch services from database
+$services = [];
+$result = $conn->query("SELECT * FROM services ORDER BY name");
+if ($result) {
+    $services = $result->fetch_all(MYSQLI_ASSOC);
+}
+?>
+
 <!doctype html>
 <html class="no-js" lang="zxx">
 
@@ -103,7 +115,7 @@
                                             </li>
                                             <li>
                                                 <a href="pages/blog">Blog</a>                       
-                                            </li>                                          
+                                            </li>                                                                                     
                                             <li>
                                                 <a href="pages/contact">Contact Us</a>
                                             </li>
@@ -288,7 +300,7 @@
                                 <i class="package-dot rotate"></i>
                             </div>
                             <div class="package-btn">
-                                <a href="appointment.php" class="vs-btn style5">Book Now</a>
+                                <a href="pages/appointment" class="vs-btn style5">Book Now</a>
                             </div>
                         </div>
                     </div>
@@ -305,7 +317,7 @@
                                 <i class="package-dot rotate-reverse"></i>
                             </div>
                             <div class="package-btn">
-                                <a href="appointment.php" class="vs-btn style5">Book Now</a>
+                                <a href="pages/appointment" class="vs-btn style5">Book Now</a>
                             </div>
                         </div>
                     </div>
@@ -332,49 +344,136 @@
     <!-- Brand Partners -->
 
     <style>
-        .service-text {
-            font-weight: bold;
-            color: black;
-            font-size: large;
-            background:rgb(237, 237, 238);
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin: 5px;
-            transition: all 0.3s ease;  
-            /* style:"font-family:'Marcellus', serif; */
-            font-family: 'Marcellus', serif;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(0.5deg); }
         }
-        .serv {
-            background: #f8f9fa;
-            /* padding: 20px 0; */                        
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(20, 20, 22, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(31, 32, 34, 0.6); }
+        }
+        
+        .ai-service-display {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 40px 0;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .ai-service-display::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(100, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 100, 200, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .ai-service-tag {
+            display: inline-block;
+            font-weight: 500;
+            color: #333;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 14px 32px;
+            border-radius: 8px;
+            margin: 10px;
+            transition: all 0.4s ease;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid rgba(27, 30, 32, 0.1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            animation: float 6s ease-in-out infinite, glow 4s ease-in-out infinite;            
+            letter-spacing: 1px;
+        }
+        
+        .ai-service-tag::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(100, 200, 255, 0) 0%,
+                rgba(100, 200, 255, 0.2) 50%,
+                rgba(100, 200, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        
+        .ai-service-tag:hover {
+            transform: translateY(-5px) scale(1.03);
+            background: rgba(255, 255, 255, 1);
+            color: #0066cc;
+            border-color: rgba(34, 36, 38, 0.6);
+            animation-play-state: paused;
+        }
+        
+        .ai-service-tag:hover::before {
+            opacity: 1;
+            animation: shine 1.5s ease;
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(30deg) translate(-30%, -30%); }
+            100% { transform: rotate(30deg) translate(30%, 30%); }
+        }
+        
+        .ai-service-tag:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+        
+        .ai-service-tag:nth-child(even) {
+            animation-delay: 0.4s;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .ai-service-tag {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+                margin: 8px;
+            }
         }
     </style>
 
-    <div class="space-extra serv">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <div class="ai-service-display">
         <div class="container">
             <div class="row vs-carousel text-center" data-slide-show="6" data-lg-slide-show="4" data-md-slide-show="3" data-sm-slide-show="2" data-xs-slide-show="2">
                 <div class="col-auto">
-                    <p class="service-text">Precision Shaves</p>
+                    <p class="ai-service-tag">Precision Shaves</p>
                 </div>
                 <div class="col-auto">
-                    <p class="service-text">Hair Coloring</p>
+                    <p class="ai-service-tag">Hair Coloring</p>
                 </div>
                 <div class="col-auto">
-                    <p class="service-text">Massage Therapy</p>
+                    <p class="ai-service-tag">Massage Therapy</p>
                 </div>
                 <div class="col-auto">
-                    <p class="service-text">Haircuts</p>
+                    <p class="ai-service-tag">Haircuts</p>
                 </div>
                 <div class="col-auto">
-                    <p class="service-text">Beard Trimming</p>
+                    <p class="ai-service-tag">Beard Trimming</p>
                 </div>
                 <div class="col-auto">
-                    <p class="service-text">Facial Treatments</p>
+                    <p class="ai-service-tag">Facial Treatments</p>
                 </div>
                 <div class="col-auto">
-                    <p class="service-text">Car Wash</p>
+                    <p class="ai-service-tag">Car Wash</p>
                 </div>
             </div>
         </div>
@@ -382,7 +481,7 @@
         
     <!-- Feature Area -->
     
-    <section class=" space-top space-extra-bottom bg-gradient-1 z-index-common">
+    <section class="space-top space-extra-bottom bg-gradient-1 z-index-common">
         <div class="container">
             <div class="title-area text-center wow fadeInUp" data-wow-delay="0.2s">
                 <span class="sec-subtitle">barbershop & spa</span>
@@ -391,102 +490,130 @@
             </div>
 
             <div class="row vs-carousel wow fadeInUp" data-wow-delay="0.3s" data-slide-show="3" data-md-slide-show="2">
-
-                <div class="col-lg-4 col-xl-4">
-                    <div class="feature-style2">
-                        <div class="vs-icon style2"><img src="assets/img/icon/fe-1-1.png" alt="icon"></div>
-                        <h3 class="feature-title h4">Hair & Beard Services</h3>
-                        <div class="arrow-shape"><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i></div>
-                        <p class="feature-text">Precision haircuts, beard trimming, and styling for a sharp, polished look.</p>
-                        <a href="about.html" class="link-btn style2">read more</a>
+                <?php if (!empty($services)): ?>
+                    <?php foreach ($services as $service): ?>
+                        <div class="col-lg-4 col-xl-4">
+                            <div class="feature-style2">
+                                <div class="vs-icon style2">
+                                    <!-- You can customize icons based on service name or add an icon field to your database -->
+                                    <?php 
+                                    $icon = "assets/img/icon/fe-1-1.png"; // Default icon
+                                    if (stripos($service['name'], 'hair') !== false) {
+                                        $icon = "assets/img/icon/fe-1-1.png";
+                                    } elseif (stripos($service['name'], 'spa') !== false) {
+                                        $icon = "assets/img/icon/fe-1-2.png";
+                                    } elseif (stripos($service['name'], 'color') !== false) {
+                                        $icon = "assets/img/icon/fe-1-3.png";
+                                    }
+                                    ?>
+                                    <img src="<?= $icon ?>" alt="icon">
+                                </div>
+                                <h3 class="feature-title h4"><?= htmlspecialchars($service['name']) ?></h3>
+                                <div class="arrow-shape">
+                                    <i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i>
+                                </div>
+                                <p class="feature-text"><?= htmlspecialchars($service['description']) ?></p>
+                                <!-- <a href="about.html" class="link-btn style2">read more</a> -->
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Fallback content if no services exist -->
+                    <div class="col-lg-4 col-xl-4">
+                        <div class="feature-style2">
+                            <div class="vs-icon style2"><img src="assets/img/icon/fe-1-1.png" alt="icon"></div>
+                            <h3 class="feature-title h4">Our Services</h3>
+                            <div class="arrow-shape"><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i></div>
+                            <p class="feature-text">Check back soon for our complete service offerings.</p>
+                            <a href="about.html" class="link-btn style2">read more</a>
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-lg-4 col-xl-4">
-                    <div class="feature-style2">
-                        <div class="vs-icon style2"><img src="assets/img/icon/fe-1-2.png" alt="icon"></div>
-                        <h3 class="feature-title h4">Spa Treatments</h3>
-                        <div class="arrow-shape"><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i></div>
-                        <p class="feature-text">Relax with face scrubbing, masking, and soothing massage services.</p>
-                        <a href="about.html" class="link-btn style2">read more</a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-xl-4">
-                    <div class="feature-style2">
-                        <div class="vs-icon style2"><img src="assets/img/icon/fe-1-3.png" alt="icon"></div>
-                        <h3 class="feature-title h4">Hair Coloring</h3>
-                        <div class="arrow-shape"><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i></div>
-                        <p class="feature-text">Vibrant hair color and dye services to express your unique style.</p>
-                        <a href="about.html" class="link-btn style2">read more</a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-xl-4">
-                    <div class="feature-style2">
-                        <div class="vs-icon style2"><img src="assets/img/icon/fe-1-4.png" alt="icon"></div>
-                        <h3 class="feature-title h4">Amenities</h3>
-                        <div class="arrow-shape"><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i><i class="arrow"></i></div>
-                        <p class="feature-text">Enjoy parking, car wash, nearby Pizza Inn, and backup power.</p>
-                        <a href="about.html" class="link-btn style2">read more</a>
-                    </div>
-                </div>
-
+                <?php endif; ?>
             </div>
-            
         </div>
     </section>
 
     <!-- About Area -->
-    
-    <section class=" space-extra-bottom">
+
+    <section class="space-bottom">
         <div class="shape-mockup d-none d-xxxl-block" data-top="-26%" data-left="-10%">
             <div class="curb-shape1"></div>
         </div>
         <div class="shape-mockup jump d-none d-xxxl-block" data-top="-50%" data-right="0"><img src="assets/img/shape/b-s-1-5.png" alt="shape"></div>
         <div class="shape-mockup jump-reverse d-none d-xxxl-block" data-top="6%" data-right="13%"><img src="assets/img/shape/leaf-1-4.png" alt="shape"></div>
         <div class="container">
-            <div class="row gx-80 align-items-center">
+            <div class="section-title text-center mb-5">
+                <h2 class="title-style2">The <span class="text-theme">Gentleman's</span> Retreat</h2>
+                <p class="subtitle">Where precision meets relaxation</p>
+            </div>
+            
+            <div class="row gx-60 align-items-center">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.2s">
                     <div class="img-box2">
                         <div class="img-1">
-                            <img src="assets/img/about/ab-2-1.jpg" alt="about">
+                            <img src="assets/img/about/ab-2-1.jpg" alt="Professional barber giving a haircut" class="rounded-3">
                         </div>
-                        <div class="img-2 jump"><img src="assets/img/shape/leaf-1-3.png" alt="shape"></div>
+                        <div class="img-2 jump"><img src="assets/img/shape/leaf-1-3.png" alt="decorative leaf"></div>
                         <div class="img-shape">
-                            <span class="img-text jump-reverse">Feature</span>
+                            <span class="img-text jump-reverse">Est. 2013</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="about-box1">
-                        <span class="sec-subtitle">Experience Grooming <span class="sec-subtext">10 Years</span></span>
-                        <h2 class="sec-title2">DISCOVER A <span class="text-theme">NEW</span> STYLE</h2>
-                        <div class="media-style1">
+                    <div class="about-box1 ps-lg-4">                        
+                        <div class="media-style1 mb-4">
                             <div class="circle-btn style3">
                                 <a href="about.html" class="btn-icon"><i class="far fa-arrow-right"></i></a>
                                 <div class="btn-text">
                                     <svg viewBox="0 0 150 150">
                                         <text>
-                                            <textPath href="#textPath">experience the ultimate grooming and relaxation</textPath>
+                                            <textPath href="#textPath">experience the art of traditional grooming</textPath>
                                         </text>
                                     </svg>
                                 </div>
                             </div>
                             <div class="media-body">
-                                <p class="media-text">We ensure you leave looking sharp and feeling refreshed.</p>
+                                <p class="media-text">Where classic techniques meet modern style</p>
                             </div>
                         </div>
-                        <p class="about-text">Our barbershop and spa offer top-tier grooming and relaxation services, from precision shaves to soothing massages, all in a comfortable environment with premium amenities.</p>
-                        <div class="table-style1">
-                            <div class="tr">
-                                <div class="th">Years of Experience:</div>
-                                <div class="td">10 Years Service</div>
+                        
+                        <p class="about-text mb-4">At our barbershop, we don't just cut hair - we craft confidence. Our master barbers combine time-honored techniques with contemporary styles to give you a look that's uniquely yours.</p>
+                        
+                        <div class="feature-grid mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="feature-card">
+                                        <i class="fas fa-cut"></i>
+                                        <h6>Precision Cuts</h6>
+                                        <p>Every strand perfectly placed</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="feature-card">
+                                        <i class="fas fa-spa"></i>
+                                        <h6>Hot Towel Service</h6>
+                                        <p>Ultimate relaxation</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="feature-card">
+                                        <i class="fas fa-chair"></i>
+                                        <h6>Premium Products</h6>
+                                        <p>Quality you can feel</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="feature-card">
+                                        <i class="fas fa-user-tie"></i>
+                                        <h6>Beard Mastery</h6>
+                                        <p>Sculpted perfection</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="tr">
-                                <div class="th">WE ALWAYS:</div>
-                                <div class="td">Deliver exceptional grooming</div>
-                            </div>
+                        </div>
+                        
+                        <div class="cta-box text-center text-lg-start">
+                            <a href="pages/service" class="btn style3">Discover Our Services</a>
                         </div>
                     </div>
                 </div>
@@ -494,9 +621,111 @@
         </div>
     </section>
 
+    <style>
+        .section-title {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .title-style2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .title-style2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--theme-color);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 400;
+        }
+        
+        .feature-grid {
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 8px;
+            padding: 20px;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        .feature-card i {
+            font-size: 1.8rem;
+            color: var(--theme-color);
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .feature-card h6 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+        
+        .btn.style3 {
+            background: var(--theme-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn.style3:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .space-bottom {
+            padding: 60px 0;
+            position: relative;
+        }
+        
+        @media (max-width: 991.98px) {
+            .space-bottom {
+                padding: 40px 0;
+            }
+            
+            .title-style2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+
     <!-- Gallery Area -->
     
-    <div class="position-relative space-extra-bottom">
+    <!-- <div class="position-relative space-extra-bottom">
         <div class="gallery-shape1"></div>
         <div class="container-fluid">
             <div class="row gallery-slider1 vs-carousel" data-slide-show="1" data-center-mode="true" data-xl-center-mode="true" data-ml-center-mode="true" data-lg-center-mode="true" data-md-center-mode="true" data-center-padding="477px" data-xl-center-padding="320px" data-ml-center-padding="200px" data-lg-center-padding="150px" data-md-center-padding="80px">
@@ -566,11 +795,11 @@
                 <button data-slick-next=".gallery-slider1"><i class="arrow"></i>Next</button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Service Area -->
     
-    <section class=" space">
+    <!-- <section class=" space">
         <div class="title-area text-center wow fadeInUp" data-wow-delay="0.2s">
             <span class="sec-subtitle">our services</span>
             <h2 class="sec-title">Discover Our Barbershop & Spa</h2>
@@ -632,60 +861,224 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Team Area -->
     
-    <section class=" space-extra-bottom">
+    <section class="team-section space-bottom">
         <div class="container">
             <div class="title-area text-center wow fadeInUp" data-wow-delay="0.2s">
-                <span class="sec-subtitle">our team</span>
-                <h2 class="sec-title">Expert Barbers & Spa Specialists</h2>
-                <div class="sec-shape"><img src="assets/img/shape/sec-shape-1.png" alt="shape"></div>
+                <span class="sec-subtitle">MEET THE ARTISANS</span>
+                <h2 class="sec-title">Master Craftsmen of Grooming</h2>
+                <div class="sec-shape">
+                    <svg width="100" height="8" viewBox="0 0 100 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 4C2 4 18 -2 50 4C82 10 98 4 98 4" stroke="var(--theme-color)" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div>
             </div>
+            
             <div class="row vs-carousel" data-arrows="true" data-slide-show="4" data-lg-slide-show="3" data-md-slide-show="2">
+                <!-- Team Member 1 -->
                 <div class="col-xl-3">
-                    <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-1.png" alt="member"></a></div>
-                        <h3 class="team-name h4"><a href="team-details.html">Lenda Murray</a></h3>
-                        <p class="team-degi">Master Barber</p>
+                    <div class="team-card">
+                        <div class="team-img">
+                            <a href="team-details.html">
+                                <img src="assets/img/team/team-1-1.png" alt="Master Barber Lenda Murray">
+                                <div class="team-overlay">
+                                    <span class="exp-badge">12 yrs experience</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="team-info">
+                            <h3 class="team-name"><a href="team-details.html">Lenda Murray</a></h3>
+                            <p class="team-degi">Master Barber</p>
+                            <div class="team-specialty">Classic & Modern Cuts</div>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Team Member 2 -->
                 <div class="col-xl-3">
-                    <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-2.png" alt="member"></a></div>
-                        <h3 class="team-name h4"><a href="team-details.html">Emely Jonson</a></h3>
-                        <p class="team-degi">Spa Therapist</p>
+                    <div class="team-card">
+                        <div class="team-img">
+                            <a href="team-details.html">
+                                <img src="assets/img/team/team-1-2.png" alt="Spa Therapist Emely Jonson">
+                                <div class="team-overlay">
+                                    <span class="exp-badge">8 yrs experience</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="team-info">
+                            <h3 class="team-name"><a href="team-details.html">Emely Jonson</a></h3>
+                            <p class="team-degi">Spa Therapist</p>
+                            <div class="team-specialty">Holistic Relaxation</div>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Team Member 3 -->
                 <div class="col-xl-3">
-                    <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-3.png" alt="member"></a></div>
-                        <h3 class="team-name h4"><a href="team-details.html">Arika Murray</a></h3>
-                        <p class="team-degi">Hair Stylist</p>
+                    <div class="team-card">
+                        <div class="team-img">
+                            <a href="team-details.html">
+                                <img src="assets/img/team/team-1-3.png" alt="Hair Stylist Arika Murray">
+                                <div class="team-overlay">
+                                    <span class="exp-badge">10 yrs experience</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="team-info">
+                            <h3 class="team-name"><a href="team-details.html">Arika Murray</a></h3>
+                            <p class="team-degi">Hair Artist</p>
+                            <div class="team-specialty">Creative Styling</div>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Team Member 4 -->
                 <div class="col-xl-3">
-                    <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-4.png" alt="member"></a></div>
-                        <h3 class="team-name h4"><a href="team-details.html">Lola Jonson</a></h3>
-                        <p class="team-degi">Massage Expert</p>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="team-style1">
-                        <div class="team-img"><a href="team-details.html"><img src="assets/img/team/team-1-5.png" alt="member"></a></div>
-                        <h3 class="team-name h4"><a href="team-details.html">Rose Marian</a></h3>
-                        <p class="team-degi">Facial Specialist</p>
+                    <div class="team-card">
+                        <div class="team-img">
+                            <a href="team-details.html">
+                                <img src="assets/img/team/team-1-4.png" alt="Massage Expert Lola Jonson">
+                                <div class="team-overlay">
+                                    <span class="exp-badge">7 yrs experience</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="team-info">
+                            <h3 class="team-name"><a href="team-details.html">Lola Jonson</a></h3>
+                            <p class="team-degi">Massage Expert</p>
+                            <div class="team-specialty">Therapeutic Techniques</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <style>
+        .team-section {
+            background: #f9f9f9;
+            position: relative;
+            padding: 80px 0;
+        }
+        
+        .sec-subtitle {
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .sec-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .sec-shape {
+            margin: 20px auto 40px;
+        }
+        
+        .team-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+            margin-bottom: 30px;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        
+        .team-img {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .team-img img {
+            width: 100%;
+            transition: transform 0.5s ease;
+        }
+        
+        .team-card:hover .team-img img {
+            transform: scale(1.05);
+        }
+        
+        .team-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .team-card:hover .team-overlay {
+            opacity: 1;
+        }
+        
+        .exp-badge {
+            background: var(--theme-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .team-info {
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .team-name {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+        
+        .team-name a:hover {
+            color: var(--theme-color);
+        }
+        
+        .team-degi {
+            color: var(--theme-color);
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .team-specialty {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        @media (max-width: 991px) {
+            .sec-title {
+                font-size: 2rem;
+            }
+            
+            .team-section {
+                padding: 60px 0;
+            }
+        }
+    </style>
+
     <!-- Price Plan Area -->
     
-    <section class="" data-bg-src="assets/img/bg/price-bg-1-1.jpg">
+    <!-- <section class="" data-bg-src="assets/img/bg/price-bg-1-1.jpg">
         <div class="shape-mockup jump d-none d-xxl-block" data-right="2%" data-top="8%"><img src="assets/img/shape/leaf-1-1.png" alt="leaf"></div>
         <div class="container-fluid px-0 hd-container1">
             <div class="row gx-80 align-items-center">
@@ -756,11 +1149,11 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Product Area -->
     
-    <section class=" space-top">
+    <!-- <section class=" space-top">
         <div class="container">
             <div class="row mb-5">
                 <div class="col-auto">
@@ -878,77 +1271,207 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Blog Area -->
     
-    <section class=" space-extra">
+    <section class="blog-section space-md">
         <div class="container">
             <div class="title-area text-center wow fadeInUp" data-wow-delay="0.2s">
-                <span class="sec-subtitle">our blog</span>
-                <h2 class="sec-title">Grooming & Wellness Tips</h2>
-                <div class="sec-shape"><img src="assets/img/shape/sec-shape-1.png" alt="shape"></div>
+                <span class="sec-subtitle">PROFESSIONAL ADVICE</span>
+                <h2 class="sec-title">Essential Grooming Insights</h2>
+                <div class="sec-shape">
+                    <svg width="100" height="8" viewBox="0 0 100 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 4C2 4 18 -2 50 4C82 10 98 4 98 4" stroke="var(--theme-color)" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div>
             </div>
+            
             <div class="row vs-carousel arrow-margin wow fadeInUp" data-wow-delay="0.3s" data-slide-show="3" data-md-slide-show="2" data-arrows="true">
+                <!-- Blog Post 1 -->
                 <div class="col-xl-4">
-                    <div class="vs-blog blog-style1">
-                        <div class="blog-img">
-                            <a href="blog-details.html"><img src="assets/img/blog/blog-1-1.jpg" alt="Blog Thumbnail" class="w-100"></a>
+                    <div class="blog-card">
+                        <div class="blog-img">                            
+                            <img src="assets/img/blog/blog-1-1.jpg" alt="Professional beard grooming techniques" class="w-100" loading="lazy">
+                            <span class="blog-category">Beard Mastery</span>                            
                         </div>
                         <div class="blog-content">
-                            <h3 class="blog-title h5"><a href="blog-details.html">Top Tips for Maintaining a Sharp Beard</a></h3>
-                            <div class="blog-meta">
-                                <a href="blog.html">By John Deo</a>
-                                <a href="blog.html">10 FEBRUARY, 2025</a>
+                            <h3 class="blog-title">Beard Care Secrets from Master Barbers</h3>
+                            <div class="blog-features">
+                                <span>Daily washing prevents irritation</span>
+                                <span>Special oils promote healthy growth</span>
+                                <span>Proper trimming maintains shape</span>
+                                <span>Brushing distributes natural oils</span>
                             </div>
+                            <div class="blog-author">By Senior Barber John</div>
                         </div>
                     </div>
                 </div>
+                
+                <!-- Blog Post 2 -->
                 <div class="col-xl-4">
-                    <div class="vs-blog blog-style1">
-                        <div class="blog-img">
-                            <a href="blog-details.html"><img src="assets/img/blog/blog-1-2.jpg" alt="Blog Thumbnail" class="w-100"></a>
+                    <div class="blog-card">
+                        <div class="blog-img">                            
+                            <img src="assets/img/blog/blog-1-2.jpg" alt="Relaxing spa facial treatment" class="w-100" loading="lazy">
+                            <span class="blog-category">Skin Wellness</span>                            
                         </div>
                         <div class="blog-content">
-                            <h3 class="blog-title h5"><a href="blog-details.html">Benefits of Regular Spa Treatments</a></h3>
-                            <div class="blog-meta">
-                                <a href="blog.html">By Vivi Marian</a>
-                                <a href="blog.html">12 MARCH, 2025</a>
+                            <h3 class="blog-title">Transform Your Skin with These Treatments</h3>
+                            <div class="blog-features">
+                                <span>Deep cleansing removes impurities</span>
+                                <span>Exfoliation renews skin surface</span>
+                                <span>Hydration prevents premature aging</span>
+                                <span>Massage improves circulation</span>
                             </div>
+                            <div class="blog-author">By Esthetician Vivi</div>
                         </div>
                     </div>
                 </div>
+                
+                <!-- Blog Post 3 -->
                 <div class="col-xl-4">
-                    <div class="vs-blog blog-style1">
-                        <div class="blog-img">
-                            <a href="blog-details.html"><img src="assets/img/blog/blog-1-3.jpg" alt="Blog Thumbnail" class="w-100"></a>
+                    <div class="blog-card">
+                        <div class="blog-img">                            
+                            <img src="assets/img/blog/blog-1-3.jpg" alt="Hair color consultation session" class="w-100" loading="lazy">
+                            <span class="blog-category">Hair Coloring</span>                            
                         </div>
                         <div class="blog-content">
-                            <h3 class="blog-title h5"><a href="blog-details.html">Choosing the Right Hair Color for You</a></h3>
-                            <div class="blog-meta">
-                                <a href="blog.html">By Jane Baker</a>
-                                <a href="blog.html">05 APRIL, 2025</a>
+                            <h3 class="blog-title">Professional Hair Color Selection Guide</h3>
+                            <div class="blog-features">
+                                <span>Warm tones complement golden skin</span>
+                                <span>Cool tones suit pink undertones</span>
+                                <span>Balayage creates natural dimension</span>
+                                <span>Gloss treatments enhance shine</span>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4">
-                    <div class="vs-blog blog-style1">
-                        <div class="blog-img">
-                            <a href="blog-details.html"><img src="assets/img/blog/blog-1-4.jpg" alt="Blog Thumbnail" class="w-100"></a>
-                        </div>
-                        <div class="blog-content">
-                            <h3 class="blog-title h5"><a href="blog-details.html">How Massages Improve Your Wellness</a></h3>
-                            <div class="blog-meta">
-                                <a href="blog.html">By Mark Polo</a>
-                                <a href="blog.html">31 JANUARY, 2025</a>
-                            </div>
+                            <div class="blog-author">By Colorist Jane</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>    
+    </section>
+
+    <style>
+        .blog-section {
+            padding: 60px 0;
+            background: #fafafa;
+        }
+        
+        .sec-subtitle {
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .sec-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .sec-shape {
+            margin: 15px auto 30px;
+        }
+        
+        .blog-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            height: 100%;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .blog-img {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+        
+        .blog-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .blog-card:hover .blog-img img {
+            transform: scale(1.05);
+        }
+        
+        .blog-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--theme-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .blog-content {
+            padding: 20px;
+        }
+        
+        .blog-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .blog-title a:hover {
+            color: var(--theme-color);
+        }
+        
+        .blog-features {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .blog-features span {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .blog-features span:before {
+            content: "•";
+            color: var(--theme-color);
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        .blog-author {
+            font-size: 0.85rem;
+            color: #777;
+            font-style: italic;
+        }
+        
+        @media (max-width: 991px) {
+            .blog-img {
+                height: 180px;
+            }
+            
+            .sec-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>  
             
     <!-- All Js Files -->
 

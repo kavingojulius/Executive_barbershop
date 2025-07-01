@@ -9,21 +9,22 @@ CREATE TABLE admins (
 );
 
 
--- Service categories
-CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
-
--- Services
-CREATE TABLE services (
+-- Services 2 --
+CREATE TABLE services_table (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    description TEXT,
-    price DECIMAL(10, 2),
-    category_id INT,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+    description TEXT,            
 );
+
+CREATE TABLE `services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `duration` int(11) NOT NULL COMMENT 'Duration in minutes',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Appointments
 CREATE TABLE appointments (
@@ -90,6 +91,7 @@ CREATE TABLE appointment_requests (
     INDEX idx_email (email),
     INDEX idx_appointment_date (appointment_date)
 );CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 
 
 
