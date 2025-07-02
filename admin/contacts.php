@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-include  '../config/db.php';
-if (!isset($_SESSION['admin_id']) ) {
+include '../config/db.php';
+if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +34,62 @@ if (!isset($_SESSION['admin_id']) ) {
         .shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06); }
         .sidebar-link.active { background-color: #4338ca; }
         .sidebar-link:hover { background-color: #5b21b6; }
+        
+        /* Custom table styles */
+        .table-container {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .table thead {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .table th {
+            padding: 12px 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        .table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            border-top: 1px solid #f1f1f1;
+        }
+        .table tbody tr:hover {
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+        .badge-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-new {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+        .badge-read {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        .badge-archived {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        .serial-number {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+        .message-preview {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -69,47 +123,59 @@ if (!isset($_SESSION['admin_id']) ) {
 
             <!-- Main content area -->
             <main class="flex-grow-1 overflow-y-auto p-4">
-                <div class="mb-4">
-                    <h1 class="h2 fw-bold text-dark">Received messages.</h1>
-                    <!-- <p class="text-muted"></p> -->
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <h1 class="h2 fw-bold text-dark">Received Messages</h1>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-filter me-1"></i> Filter</button>
+                        <button class="btn btn-sm btn-primary"><i class="fas fa-download me-1"></i> Export</button>
+                    </div>
                 </div>
 
-
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Message</th>
-                                    <th scope="col">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $query = "SELECT * FROM contact_messages ORDER BY created_at DESC";
-                                $result = mysqli_query($conn, $query);
-                                
-                                if (mysqli_num_rows($result) > 0) {
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                        echo "<tr>";
-                                        echo "<td>" . htmlspecialchars($row['name']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['email']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['message']) . "</td>";
-                                        echo "<td>" . date("F j, Y, g:i a", strtotime($row['created_at'])) . "</td>";
-                                        echo "</tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='4' class='text-center'>No messages found.</td></tr>";
+                <div class="table-container bg-white">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 50px;">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Message Preview</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" style="width: 80px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $query = "SELECT * FROM contact_messages ORDER BY created_at DESC";
+                            $result = mysqli_query($conn, $query);
+                            $counter = 1;
+                            
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    // Generate a random status for demonstration
+                                    $statuses = ['new', 'read', 'archived'];
+                                    $randomStatus = $statuses[array_rand($statuses)];
+                                    
+                                    echo "<tr>";
+                                    echo "<td class='serial-number'>" . $counter . "</td>";
+                                    echo "<td><strong>" . htmlspecialchars($row['name']) . "</strong></td>";
+                                    echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+                                    echo "<td class='message-preview' title='" . htmlspecialchars($row['message']) . "'>" . htmlspecialchars($row['message']) . "</td>";
+                                    echo "<td>" . date("M d, Y h:i A", strtotime($row['created_at'])) . "</td>";
+                                    echo "<td><span class='badge-status badge-" . $randomStatus . "'>" . ucfirst($randomStatus) . "</span></td>";
+                                    echo "<td class='text-center'>";
+                                    echo "<button class='btn btn-sm btn-outline-primary' title='View'><i class='fas fa-eye'></i></button>";
+                                    echo "</td>";
+                                    echo "</tr>";
+                                    $counter++;
                                 }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                
-
-
+                            } else {
+                                echo "<tr><td colspan='7' class='text-center py-4'>No messages found.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </main>
         </div>
     </div>

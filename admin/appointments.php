@@ -34,6 +34,54 @@ if (!isset($_SESSION['admin_id'])) {
         .shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06); }
         .sidebar-link.active { background-color: #4338ca; }
         .sidebar-link:hover { background-color: #5b21b6; }
+        
+        /* Custom table styles */
+        .table-container {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .table thead {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .table th {
+            padding: 12px 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        .table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            border-top: 1px solid #f1f1f1;
+        }
+        .table tbody tr:hover {
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+        .badge-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-pending {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        .badge-confirmed {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        .badge-cancelled {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        .serial-number {
+            font-weight: 600;
+            color: #4f46e5;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -67,46 +115,58 @@ if (!isset($_SESSION['admin_id'])) {
 
             <!-- Main content area -->
             <main class="flex-grow-1 overflow-y-auto p-4">
-                <div class="mb-4">
-                    <h1 class="h2 fw-bold text-dark">Received Appointments.</h1>
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <h1 class="h2 fw-bold text-dark">Received Appointments</h1>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-filter me-1"></i> Filter</button>
+                        <button class="btn btn-sm btn-primary"><i class="fas fa-download me-1"></i> Export</button>
+                    </div>
                 </div>
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Phone Number</th>
-                                    <th scope="col">Appointment Date</th>
-                                    <th scope="col">Subject</th>
-                                    <th scope="col">Created At</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $query = "SELECT * FROM appointment_requests ORDER BY created_at DESC";
-                                $result = mysqli_query($conn, $query);
-                                
-                                if (mysqli_num_rows($result) > 0) {
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                        echo "<tr>";
-                                        echo "<td>" . htmlspecialchars($row['name']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['email']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['phone_number']) . "</td>";
-                                        echo "<td>" . date("F d, Y, h:i A", strtotime($row['appointment_date'])) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['subject']) . "</td>";
-                                        echo "<td>" . date("F d, Y", strtotime($row['created_at'])) . "</td>";
-                                        echo "</tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='6' class='text-center'>No appointments found.</td></tr>";
+                <div class="table-container bg-white">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 50px;">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Appointment Date</th>
+                                <th scope="col">Subject</th>
+                                <th scope="col">Created At</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $query = "SELECT * FROM appointment_requests ORDER BY created_at DESC";
+                            $result = mysqli_query($conn, $query);
+                            $counter = 1;
+                            
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    // Generate a random status for demonstration
+                                    $statuses = ['pending', 'confirmed', 'cancelled'];
+                                    $randomStatus = $statuses[array_rand($statuses)];
+                                    
+                                    echo "<tr>";
+                                    echo "<td class='serial-number'>" . $counter . "</td>";
+                                    echo "<td><strong>" . htmlspecialchars($row['name']) . "</strong></td>";
+                                    echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['phone_number']) . "</td>";
+                                    echo "<td>" . date("M d, Y h:i A", strtotime($row['appointment_date'])) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['subject']) . "</td>";
+                                    echo "<td>" . date("M d, Y", strtotime($row['created_at'])) . "</td>";
+                                    echo "<td><span class='badge-status badge-" . $randomStatus . "'>" . ucfirst($randomStatus) . "</span></td>";
+                                    echo "</tr>";
+                                    $counter++;
                                 }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            } else {
+                                echo "<tr><td colspan='8' class='text-center py-4'>No appointments found.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
 
             </main>
