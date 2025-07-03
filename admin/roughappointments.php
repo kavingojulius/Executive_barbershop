@@ -38,17 +38,6 @@ if (isset($_GET['edit'])) {
     $result = $stmt->get_result();
     $edit_appointment = $result->fetch_assoc();
 }
-
-// Fetch appointment for viewing if view_id is set
-$view_appointment = null;
-if (isset($_GET['view'])) {
-    $id = $_GET['view'];
-    $stmt = $conn->prepare("SELECT * FROM appointment_requests WHERE id=?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $view_appointment = $result->fetch_assoc();
-}
 ?>
 
 <!DOCTYPE html>
@@ -72,8 +61,10 @@ if (isset($_GET['view'])) {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
+            /* font-size: 0.875rem; */
         }
                                
+        
         .table-container {
             border-radius: 8px;
             overflow: hidden;
@@ -135,11 +126,6 @@ if (isset($_GET['view'])) {
         .badge-cancelled {
             background-color: #fee2e2;
             color: #b91c1c;
-        }
-        
-        .badge-completed {
-            background-color: #e0f2fe;
-            color: #0369a1;
         }
         
         .serial-number {
@@ -249,33 +235,6 @@ if (isset($_GET['view'])) {
             color: #a0aec0;
             font-size: 0.875rem;
         }
-        
-        .detail-label {
-            font-weight: 500;
-            color: #4a5568;
-            min-width: 120px;
-        }
-        
-        .detail-value {
-            color: #1a202c;
-        }
-        
-        .appointment-details {
-            padding: 0 1rem;
-        }
-        
-        .detail-row {
-            display: flex;
-            margin-bottom: 0.75rem;
-            align-items: flex-start;
-        }
-        
-        .message-box {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
     </style>
 </head>
 <body class="bg-light">
@@ -293,7 +252,7 @@ if (isset($_GET['view'])) {
     </div>
 
     <div class="d-flex vh-100">
-        <!-- Sidebar -->
+        <!-- Sidebar - Preserving your original styling -->
         <?php include 'sidebar.php'; ?>
 
         <!-- Main content -->
@@ -340,7 +299,7 @@ if (isset($_GET['view'])) {
                                 <th scope="col">Subject</th>
                                 <th scope="col">Created</th>
                                 <th scope="col">Status</th>
-                                <th scope="col" style="width: 100px;">Actions</th>
+                                <th scope="col" style="width: 60px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -396,14 +355,9 @@ if (isset($_GET['view'])) {
                                             <span class="badge-status <?= $badgeClass ?>"><?= $statusText ?></span>
                                         </td>
                                         <td>
-                                            <div class="d-flex gap-1">
-                                                <a href="appointments.php?view=<?= $appointment['id'] ?>" class="btn btn-sm btn-outline-secondary btn-icon btn-icon-sm" title="View Details">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="appointments.php?edit=<?= $appointment['id'] ?>" class="btn btn-sm btn-outline-primary btn-icon btn-icon-sm" title="Edit Status">
-                                                    <i class="fas fa-pencil-alt"></i>
-                                                </a>
-                                            </div>
+                                            <a href="appointments.php?edit=<?= $appointment['id'] ?>" class="btn btn-sm btn-outline-primary btn-icon btn-icon-sm" title="Edit Status">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -461,7 +415,6 @@ if (isset($_GET['view'])) {
                                     <option value="pending" <?= ($edit_appointment['status'] ?? '') == 'pending' ? 'selected' : '' ?>>Pending</option>
                                     <option value="confirmed" <?= ($edit_appointment['status'] ?? '') == 'confirmed' ? 'selected' : '' ?>>Confirmed</option>
                                     <option value="cancelled" <?= ($edit_appointment['status'] ?? '') == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
-                                    <option value="completed" <?= ($edit_appointment['status'] ?? '') == 'completed' ? 'selected' : '' ?>>Completed</option>
                                 </select>
                             </div>
                         <?php endif; ?>
@@ -475,99 +428,10 @@ if (isset($_GET['view'])) {
         </div>
     </div>
 
-    <!-- View Appointment Modal -->
-    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewModalLabel">Appointment Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <?php if (isset($view_appointment)): ?>
-                        <div class="appointment-details">
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="avatar me-3" style="width: 40px; height: 40px; font-size: 1rem;">
-                                    <?php 
-                                    $initials = implode('', array_map(function($n) { return $n[0]; }, explode(' ', $view_appointment['name']))); 
-                                    echo substr($initials, 0, 2); 
-                                    ?>
-                                </div>
-                                <div>
-                                    <h5 class="mb-0"><?= htmlspecialchars($view_appointment['name']) ?></h5>
-                                    <div class="text-muted"><?= htmlspecialchars($view_appointment['email']) ?></div>
-                                </div>
-                                <div class="ms-auto">
-                                    <span class="badge-status badge-<?= $view_appointment['status'] ?? 'pending' ?>">
-                                        <?= ucfirst($view_appointment['status'] ?? 'pending') ?>
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Phone:</span>
-                                        <span class="detail-value"><?= htmlspecialchars($view_appointment['phone_number']) ?></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Appointment Date:</span>
-                                        <span class="detail-value">
-                                            <?= date("M d, Y h:i A", strtotime($view_appointment['appointment_date'])) ?>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Created At:</span>
-                                        <span class="detail-value">
-                                            <?= date("M d, Y h:i A", strtotime($view_appointment['created_at'])) ?>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Last Updated:</span>
-                                        <span class="detail-value">
-                                            <?= date("M d, Y h:i A", strtotime($view_appointment['updated_at'] ?? $view_appointment['created_at'])) ?>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Subject:</span>
-                                        <span class="detail-value"><?= htmlspecialchars($view_appointment['subject']) ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <?php if (!empty($view_appointment['message'])): ?>
-                                <div class="message-box">
-                                    <h6 class="mb-2">Client Message:</h6>
-                                    <p class="mb-0"><?= nl2br(htmlspecialchars($view_appointment['message'])) ?></p>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <?php if (isset($view_appointment)): ?>
-                        <a href="appointments.php?edit=<?= $view_appointment['id'] ?>" class="btn btn-primary">
-                            <i class="fas fa-pencil-alt me-1"></i> Edit Status
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Auto-open modals based on URL parameters
+        // Auto-open modal if editing
         document.addEventListener('DOMContentLoaded', function() {
             <?php if (isset($edit_appointment)): ?>
                 var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
@@ -576,18 +440,6 @@ if (isset($_GET['view'])) {
                 // Clean URL when modal is closed
                 document.getElementById('statusModal').addEventListener('hidden.bs.modal', function () {
                     if (window.location.search.includes('edit=')) {
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    }
-                });
-            <?php endif; ?>
-            
-            <?php if (isset($view_appointment)): ?>
-                var viewModal = new bootstrap.Modal(document.getElementById('viewModal'));
-                viewModal.show();
-                
-                // Clean URL when modal is closed
-                document.getElementById('viewModal').addEventListener('hidden.bs.modal', function () {
-                    if (window.location.search.includes('view=')) {
                         window.history.replaceState({}, document.title, window.location.pathname);
                     }
                 });

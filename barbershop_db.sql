@@ -26,17 +26,6 @@ CREATE TABLE `services` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Appointments
-CREATE TABLE appointments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    client_name VARCHAR(100),
-    phone VARCHAR(20),
-    service_id INT,
-    date DATE,
-    time TIME,
-    status ENUM('pending', 'confirmed', 'cancelled') DEFAULT 'pending',
-    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE SET NULL
-);
 
 -- Staff
 CREATE TABLE staff (
@@ -87,10 +76,11 @@ CREATE TABLE appointment_requests (
     phone_number VARCHAR(20) NOT NULL,
     appointment_date DATETIME NOT NULL,
     subject VARCHAR(100) NOT NULL,
+    status ENUM('pending', 'confirmed', 'cancelled') DEFAULT 'pending',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_email (email),
     INDEX idx_appointment_date (appointment_date)
-);CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+)CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 
 

@@ -77,22 +77,7 @@ if (isset($_GET['edit'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .bg-indigo-700 { background-color: #4f46e5; }
-        .bg-indigo-800 { background-color: #4338ca; }
-        .bg-indigo-600 { background-color: #5b21b6; }
-        .bg-indigo-100 { background-color: #e0e7ff; }
-        .text-indigo-600 { color: #4f46e5; }
-        .hover-bg-indigo-600:hover { background-color: #5b21b6; }
-        .bg-purple-100 { background-color: #e9d5ff; }
-        .text-purple-600 { color: #7c3aed; }
-        .bg-purple-600 { background-color: #7c3aed; }
-        .progress-bar-purple { background-color: #7c3aed; }
-        .text-sm { font-size: 0.875rem; }
-        .h-2\.5 { height: 0.625rem; }
-        .rounded-full { border-radius: 9999px; }
-        .shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06); }
-        .sidebar-link.active { background-color: #4338ca; }
-        .sidebar-link:hover { background-color: #5b21b6; }
+       
         .description-cell {
             max-width: 300px;
             white-space: nowrap;

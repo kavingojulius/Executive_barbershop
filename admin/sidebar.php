@@ -1,5 +1,26 @@
 <!-- Sidebar -->
-        <div class="d-none d-md-flex flex-column flex-shrink-0 bg-indigo-700 text-white" style="width: 16rem;">
+        <style>
+
+            .bg-indigo-700 { background-color: #4f46e5; }
+            .bg-indigo-800 { background-color: #4338ca; }
+            .bg-indigo-600 { background-color: #5b21b6; }
+            .bg-indigo-100 { background-color: #e0e7ff; }
+            .text-indigo-600 { color: #4f46e5; }
+            .hover-bg-indigo-600:hover { background-color: #5b21b6; }
+            .bg-purple-100 { background-color: #e9d5ff; }
+            .text-purple-600 { color: #7c3aed; }
+            .bg-purple-600 { background-color: #7c3aed; }
+            .progress-bar-purple { background-color: #7c3aed; }
+            .text-sm { font-size: 0.875rem; }
+            .h-2\.5 { height: 0.625rem; }
+            .rounded-full { border-radius: 9999px; }
+            .shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06); }
+            .sidebar-link.active { background-color: #4338ca; }
+            .sidebar-link:hover { background-color: #5b21b6; }
+
+        </style>
+        
+        <div class="d-none d-md-flex flex-column flex-shrink-0 bg-indigo-700 text-white sidebar" style="width: 16rem;">
             <div class="d-flex align-items-center justify-content-center h4 p-3 bg-indigo-800">
                 <span class="fw-semibold">Exective Barbershop</span>
             </div>
