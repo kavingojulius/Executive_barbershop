@@ -6,6 +6,18 @@ if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
+
+// Handle delete action
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+    $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id=?");
+    $stmt->bind_param("i", $delete_id);
+    $stmt->execute();
+            
+    $_SESSION['message'] = "Message deleted successfully!";
+    header("Location: contacts.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -14,12 +26,25 @@ if (!isset($_SESSION['admin_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Executive Barbershop Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Custom color palette */
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-secondary: #FFD700;
+            --gold-light: #F5E6B3;
+            --gold-dark: #B8860B;
+            --brown-dark: #5C4033;
+            --brown-light: #8B5A2B;
+            --black: #1A1A1A;
+            --white: #FFFFFF;
+            --gray-light: #F5F5F5;
+        }
+
         /* Main layout */
         body.bg-light {
-            background-color: #f8f9fa !important;
+            background-color: var(--gray-light) !important;
         }
         
         /* Table container */
@@ -27,7 +52,7 @@ if (!isset($_SESSION['admin_id'])) {
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            background: white;
+            background: var(--white);
             position: relative;
             z-index: 1;
         }
@@ -39,8 +64,8 @@ if (!isset($_SESSION['admin_id'])) {
         }
         
         .table thead {
-            background-color: #4f46e5;
-            color: white;
+            background-color: var(--brown-dark);
+            color: var(--gold-secondary);
             position: sticky;
             top: 0;
         }
@@ -57,12 +82,12 @@ if (!isset($_SESSION['admin_id'])) {
         .table td {
             padding: 12px 15px;
             vertical-align: middle;
-            border-top: 1px solid #f1f1f1;
-            background: white;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            background: var(--white);
         }
         
         .table tbody tr:hover td {
-            background-color: rgba(79, 70, 229, 0.03);
+            background-color: rgba(212, 175, 55, 0.05);
         }
         
         /* Client info */
@@ -73,14 +98,14 @@ if (!isset($_SESSION['admin_id'])) {
         
         .client-name {
             font-weight: 500;
-            color: #333;
+            color: var(--black);
             font-size: 0.9rem;
             line-height: 1.3;
         }
         
         .client-email {
             font-size: 0.75rem;
-            color: #6c757d;
+            color: var(--brown-light);
             margin-top: 2px;
         }
         
@@ -93,7 +118,7 @@ if (!isset($_SESSION['admin_id'])) {
             text-overflow: ellipsis;
             max-width: 200px;
             font-size: 0.8rem;
-            color: #555;
+            color: var(--brown-dark);
             line-height: 1.4;
         }
         
@@ -109,24 +134,24 @@ if (!isset($_SESSION['admin_id'])) {
         }
         
         .badge-new {
-            background-color: #e6f0ff;
-            color: #1a73e8;
+            background-color: rgba(212, 175, 55, 0.2);
+            color: var(--brown-dark);
         }
         
         .badge-read {
-            background-color: #e6f7ee;
-            color: #0d8a4f;
+            background-color: rgba(139, 90, 43, 0.2);
+            color: var(--brown-dark);
         }
         
         .badge-archived {
-            background-color: #f3f4f6;
-            color: #6b7280;
+            background-color: rgba(92, 64, 51, 0.2);
+            color: var(--brown-dark);
         }
         
         /* Date cell */
         .date-cell {
             font-size: 0.8rem;
-            color: #6c757d;
+            color: var(--brown-light);
             white-space: nowrap;
         }
         
@@ -140,18 +165,31 @@ if (!isset($_SESSION['admin_id'])) {
             justify-content: center;
             border-radius: 50%;
             transition: all 0.2s;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
         }
         
         .action-btn:hover {
-            background-color: #4f46e5;
-            color: white;
+            background-color: var(--gold-primary);
+            color: var(--black);
             transform: scale(1.05);
+        }
+
+        /* Delete button specific styles */
+        .delete-btn {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        
+        .delete-btn:hover {
+            background-color: #dc3545;
+            color: white;
         }
         
         /* Modal styling */
         .modal-message {
             white-space: pre-wrap;
-            background-color: #f8f9fa;
+            background-color: var(--gray-light);
             padding: 12px;
             border-radius: 6px;
             font-size: 0.9rem;
@@ -161,6 +199,175 @@ if (!isset($_SESSION['admin_id'])) {
         /* Header styling */
         .header-search {
             max-width: 200px;
+        }
+
+        /* Alert styling */
+        .alert-success {
+            background-color: rgba(139, 90, 43, 0.2);
+            border-color: rgba(139, 90, 43, 0.3);
+            color: var(--brown-dark);
+        }
+        
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-color: rgba(220, 53, 69, 0.3);
+            color: #721c24;
+        }
+
+        /* ================== */
+        /* Responsive Additions */
+        /* ================== */
+
+        /* Number cell styling */
+        .number-cell {
+            position: sticky;
+            left: 0;
+            background-color: var(--white);
+            z-index: 1;
+        }
+
+        /* Improved table responsiveness */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .table th, .table td {
+                padding: 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            
+            .message-preview {
+                max-width: 150px;
+            }
+
+            .client-name {
+                font-size: 0.85rem;
+            }
+
+            .client-email {
+                font-size: 0.7rem;
+            }
+
+            .date-cell {
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 576px) {
+            .table-container {
+                border-radius: 0;
+                box-shadow: none;
+                border: 1px solid rgba(0,0,0,0.1);
+            }
+
+            /* Visual indicator for scrolling */
+            .table-responsive:after {
+                content: '→';
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--gold-primary);
+                font-size: 1.5rem;
+                opacity: 0.7;
+                animation: bounceRight 2s infinite;
+            }
+            
+            @keyframes bounceRight {
+                0%, 100% { transform: translateY(-50%) translateX(0); }
+                50% { transform: translateY(-50%) translateX(5px); }
+            }
+        }
+
+        /* Very small screens - stacked layout */
+        @media (max-width: 300px) {
+            .table-responsive:after {
+                display: none;
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            tr {
+                margin-bottom: 1rem;
+                border: 1px solid rgba(0,0,0,0.1);
+                position: relative;
+            }
+            
+            td {
+                border: none;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+                position: relative;
+                padding-left: 50%;
+                white-space: normal;
+                text-align: left;
+            }
+            
+            td:before {
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                color: var(--gold-dark);
+                content: attr(data-label);
+            }
+            
+            /* Reset specific styles for stacked layout */
+            .message-preview {
+                max-width: none;
+                -webkit-line-clamp: unset;
+                white-space: normal;
+            }
+            
+            .number-cell {
+                position: static;
+                background-color: transparent;
+            }
+
+            /* Hide the first column (number) in stacked view */
+            td:first-child {
+                display: none;
+            }
+
+            /* Adjust action button */
+            .action-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background-color: var(--gold-primary);
+                color: var(--black);
+            }
+        }
+
+        /* Tiny screens - further adjustments */
+        @media (max-width: 360px) {
+            td {
+                padding-left: 40%;
+            }
+            
+            td:before {
+                width: 35%;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -177,32 +384,38 @@ if (!isset($_SESSION['admin_id'])) {
                     <button class="d-md-none btn btn-outline-secondary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <div class="input-group header-search">
-                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
-                        <input type="text" class="form-control border-start-0" placeholder="Search...">
-                    </div>
+                    <h1 class="h5 mb-0 text-brown-dark">Executive Barbershop</h1>
                 </div>
-                <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-outline-secondary"><i class="fas fa-bell"></i></button>
-                    <button class="btn btn-outline-secondary"><i class="fas fa-envelope"></i></button>
+                <div class="d-flex align-items-center gap-3">                    
                     <div class="d-flex align-items-center">
-                        <img class="rounded-circle me-2" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User profile" width="32" height="32">
-                        <span class="d-none d-md-inline text-sm">Admin</span>
+                        <span class="avatar me-2" style="background-color: var(--gold-primary) !important; color: var(--black) !important; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">AD</span>
+                        <span class="d-none d-md-inline text-sm text-brown-dark">Admin</span>
                     </div>
                 </div>
             </header>
 
             <!-- Main content area -->
             <main class="flex-grow-1 overflow-y-auto p-4">
-                <div class="mb-4 d-flex justify-content-between align-items-center">
-                    <h1 class="h4 fw-bold text-dark mb-0">Client Messages</h1>
-                    <div>
-                        <button class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-filter me-1"></i> Filter</button>
-                        <button class="btn btn-sm btn-primary"><i class="fas fa-download me-1"></i> Export</button>
+                <!-- Success/Error Messages -->
+                <?php if (isset($_SESSION['success_message'])): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION['success_message']; unset($_SESSION['success_message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                <?php endif; ?>
+                
+                <?php if (isset($_SESSION['error_message'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION['error_message']; unset($_SESSION['error_message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <h1 class="h4 fw-bold text-brown-dark mb-0">Client Messages</h1>
                 </div>
 
-                <div class="table-container">
+                <div class="table-container table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -211,7 +424,7 @@ if (!isset($_SESSION['admin_id'])) {
                                 <th scope="col">Message</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Status</th>
-                                <th scope="col" style="width: 50px;"></th>
+                                <th scope="col" style="width: 100px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -220,24 +433,25 @@ if (!isset($_SESSION['admin_id'])) {
                             $result = mysqli_query($conn, $query);
                             $counter = 1;
                             
-                            if (mysqli_num_rows($result) > 0) {
+                            if ($result && mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     $statuses = ['new', 'read', 'archived'];
                                     $randomStatus = $statuses[array_rand($statuses)];
                                     
                                     echo "<tr>";
-                                    echo "<td class='text-muted'>" . $counter . "</td>";
-                                    echo "<td>";
+                                    echo "<td class='text-muted number-cell' data-label='#'>" . $counter . "</td>";
+                                    echo "<td data-label='Client'>";
                                     echo "<div class='client-info'>";
                                     echo "<span class='client-name'>" . htmlspecialchars($row['name']) . "</span>";
                                     echo "<span class='client-email'>" . htmlspecialchars($row['email']) . "</span>";
                                     echo "</div>";
                                     echo "</td>";
-                                    echo "<td><div class='message-preview' title='" . htmlspecialchars($row['message']) . "'>" . htmlspecialchars($row['message']) . "</div></td>";
-                                    echo "<td class='date-cell'>" . date("M d, Y", strtotime($row['created_at'])) . "</td>";
-                                    echo "<td><span class='badge-status badge-" . $randomStatus . "'>" . ucfirst($randomStatus) . "</span></td>";
-                                    echo "<td class='text-center'>";
-                                    echo "<button class='btn btn-sm action-btn btn-outline-primary view-message' 
+                                    echo "<td data-label='Message'><div class='message-preview' title='" . htmlspecialchars($row['message']) . "'>" . htmlspecialchars($row['message']) . "</div></td>";
+                                    echo "<td class='date-cell' data-label='Date'>" . date("M d, Y", strtotime($row['created_at'])) . "</td>";
+                                    echo "<td data-label='Status'><span class='badge-status badge-" . $randomStatus . "'>" . ucfirst($randomStatus) . "</span></td>";
+                                    echo "<td class='text-center' data-label='Actions'>";
+                                    echo "<div class='d-flex gap-1 justify-content-center'>";
+                                    echo "<button class='btn btn-sm action-btn view-message' 
                                             data-bs-toggle='modal' 
                                             data-bs-target='#messageModal'
                                             data-id='" . $row['id'] . "'
@@ -248,6 +462,10 @@ if (!isset($_SESSION['admin_id'])) {
                                             title='View'>
                                             <i class='fas fa-eye'></i>
                                         </button>";
+                                    echo "<a href='contacts.php?delete_id=" . $row['id'] . "' class='btn btn-sm action-btn delete-btn' title='Delete' onclick='return confirm(\"Are you sure you want to delete this message?\")'>
+                                            <i class='fas fa-trash'></i>
+                                        </a>";
+                                    echo "</div>";
                                     echo "</td>";
                                     echo "</tr>";
                                     $counter++;
@@ -267,19 +485,19 @@ if (!isset($_SESSION['admin_id'])) {
     <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-brown-dark text-gold-secondary">
                     <h5 class="modal-title" id="messageModalLabel">Message Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <h6 class="fw-bold mb-1">From:</h6>
-                        <div id="modal-client-name" class="fw-bold"></div>
-                        <div id="modal-client-email" class="text-muted small"></div>
+                        <div id="modal-client-name" class="fw-bold text-brown-dark"></div>
+                        <div id="modal-client-email" class="small text-brown-light"></div>
                     </div>
                     <div class="mb-3">
                         <h6 class="fw-bold mb-1">Date:</h6>
-                        <div id="modal-date" class="text-muted small"></div>
+                        <div id="modal-date" class="small text-brown-light"></div>
                     </div>
                     <div class="mb-3">
                         <h6 class="fw-bold mb-1">Message:</h6>
@@ -288,13 +506,12 @@ if (!isset($_SESSION['admin_id'])) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Reply</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Initialize modal with message data
         document.addEventListener('DOMContentLoaded', function() {

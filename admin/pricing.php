@@ -9,30 +9,30 @@ if (!isset($_SESSION['admin_id'])) {
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['add_service'])) {
-        // Add new service
-        $name = $_POST['name'];
-        $description = $_POST['description'];
+    if (isset($_POST['add_pricing'])) {
+        // Add new pricing item
+        $service_name = $_POST['service_name'];
+        $price = $_POST['price'];
         
-        $stmt = $conn->prepare("INSERT INTO services (name, description) VALUES (?, ?)");
-        $stmt->bind_param("ss", $name, $description);
+        $stmt = $conn->prepare("INSERT INTO pricing (service_name, price) VALUES (?, ?)");
+        $stmt->bind_param("sd", $service_name, $price);
         $stmt->execute();
         
-        $_SESSION['message'] = "Service added successfully!";
-        header("Location: services.php");
+        $_SESSION['message'] = "Pricing item added successfully!";
+        header("Location: pricing.php");
         exit();
-    } elseif (isset($_POST['update_service'])) {
-        // Update existing service
+    } elseif (isset($_POST['update_pricing'])) {
+        // Update existing pricing item
         $id = $_POST['id'];
-        $name = $_POST['name'];
-        $description = $_POST['description'];
+        $service_name = $_POST['service_name'];
+        $price = $_POST['price'];
         
-        $stmt = $conn->prepare("UPDATE services SET name=?, description=? WHERE id=?");
-        $stmt->bind_param("ssi", $name, $description, $id);
+        $stmt = $conn->prepare("UPDATE pricing SET service_name=?, price=? WHERE id=?");
+        $stmt->bind_param("sdi", $service_name, $price, $id);
         $stmt->execute();
         
-        $_SESSION['message'] = "Service updated successfully!";
-        header("Location: services.php");
+        $_SESSION['message'] = "Pricing item updated successfully!";
+        header("Location: pricing.php");
         exit();
     }
 }
@@ -40,31 +40,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Handle delete request
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    $stmt = $conn->prepare("DELETE FROM services WHERE id=?");
+    $stmt = $conn->prepare("DELETE FROM pricing WHERE id=?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     
-    $_SESSION['message'] = "Service deleted successfully!";
-    header("Location: services.php");
+    $_SESSION['message'] = "Pricing item deleted successfully!";
+    header("Location: pricing.php");
     exit();
 }
 
-// Fetch all services
-$services = [];
-$result = $conn->query("SELECT * FROM services ORDER BY name");
+// Fetch all pricing items
+$pricing = [];
+$result = $conn->query("SELECT * FROM pricing ORDER BY service_name");
 if ($result) {
-    $services = $result->fetch_all(MYSQLI_ASSOC);
+    $pricing = $result->fetch_all(MYSQLI_ASSOC);
 }
 
-// Fetch service for editing if edit_id is set
-$edit_service = null;
+// Fetch pricing item for editing if edit_id is set
+$edit_pricing = null;
 if (isset($_GET['edit'])) {
     $id = $_GET['edit'];
-    $stmt = $conn->prepare("SELECT * FROM services WHERE id=?");
+    $stmt = $conn->prepare("SELECT * FROM pricing WHERE id=?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
-    $edit_service = $result->fetch_assoc();
+    $edit_pricing = $result->fetch_assoc();
 }
 ?>
 
@@ -73,15 +73,13 @@ if (isset($_GET['edit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services Management Dashboard</title>
+    <title>Pricing Management Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .description-cell {
-            max-width: 300px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .price-cell {
+            width: 100px;
+            text-align: right;
         }
         .number-cell {
             width: 50px;
@@ -111,8 +109,8 @@ if (isset($_GET['edit'])) {
                 font-size: 0.75rem;
             }
             
-            .description-cell {
-                max-width: 200px;
+            .price-cell {
+                width: 80px;
             }
         }
         
@@ -182,13 +180,11 @@ if (isset($_GET['edit'])) {
             
             td:nth-of-type(1):before { content: "#"; }
             td:nth-of-type(2):before { content: "Service Name"; }
-            td:nth-of-type(3):before { content: "Description"; }
+            td:nth-of-type(3):before { content: "Price"; }
             td:nth-of-type(4):before { content: "Actions"; }
             
-            /* Reset some styles for stacked layout */
-            .description-cell {
-                max-width: none;
-                white-space: normal;
+            .price-cell {
+                text-align: left !important;
             }
             
             .number-cell {
@@ -203,7 +199,6 @@ if (isset($_GET['edit'])) {
             }
         }
     </style>
-
 </head>
 <body class="bg-light">
     <div class="d-flex vh-100">
@@ -231,8 +226,8 @@ if (isset($_GET['edit'])) {
             <!-- Main content area -->
             <main class="flex-grow-1 overflow-y-auto p-4">
                 <div class="mb-4">
-                    <h1 class="h2 fw-bold text-dark">Services Management</h1>
-                    <p class="text-muted">Add, edit, or delete barbershop services</p>
+                    <h1 class="h2 fw-bold text-dark">Pricing Management</h1>
+                    <p class="text-muted">Manage your barbershop pricing</p>
                     
                     <!-- Success message -->
                     <?php if (isset($_SESSION['message'])): ?>
@@ -243,13 +238,13 @@ if (isset($_GET['edit'])) {
                         <?php unset($_SESSION['message']); ?>
                     <?php endif; ?>
                     
-                    <!-- Add Service Button -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#serviceModal">
-                        <i class="fas fa-plus me-2"></i>Add New Service
+                    <!-- Add Pricing Button -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pricingModal">
+                        <i class="fas fa-plus me-2"></i>Add New Pricing Item
                     </button>
                 </div>
 
-                <!-- Services Table -->
+                <!-- Pricing Table -->
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="table-responsive">
@@ -258,28 +253,26 @@ if (isset($_GET['edit'])) {
                                     <tr>
                                         <th class="number-cell">#</th>
                                         <th>Service Name</th>
-                                        <th>Description</th>
+                                        <th class="price-cell">Price</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (empty($services)): ?>
+                                    <?php if (empty($pricing)): ?>
                                         <tr>
-                                            <td colspan="4" class="text-center py-4">No services found. Add your first service!</td>
+                                            <td colspan="4" class="text-center py-4">No pricing items found. Add your first pricing item!</td>
                                         </tr>
                                     <?php else: ?>
-                                        <?php foreach ($services as $index => $service): ?>
+                                        <?php foreach ($pricing as $index => $item): ?>
                                             <tr>
                                                 <td class="number-cell"><?= $index + 1 ?></td>
-                                                <td><?= htmlspecialchars($service['name']) ?></td>
-                                                <td class="description-cell" title="<?= htmlspecialchars($service['description']) ?>">
-                                                    <?= htmlspecialchars($service['description']) ?>
-                                                </td>
+                                                <td><?= htmlspecialchars($item['service_name']) ?></td>
+                                                <td class="price-cell">$<?= number_format($item['price'], 2) ?></td>
                                                 <td>
-                                                    <a href="services.php?edit=<?= $service['id'] ?>" class="btn btn-sm btn-outline-primary me-2" title="Edit">
+                                                    <a href="pricing.php?edit=<?= $item['id'] ?>" class="btn btn-sm btn-outline-primary me-2" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <a href="services.php?delete=<?= $service['id'] ?>" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this service?')">
+                                                    <a href="pricing.php?delete=<?= $item['id'] ?>" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this pricing item?')">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>
@@ -292,36 +285,40 @@ if (isset($_GET['edit'])) {
                     </div>
                 </div>
 
-                <!-- Service Modal -->
-                <div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+                <!-- Pricing Modal -->
+                <div class="modal fade" id="pricingModal" tabindex="-1" aria-labelledby="pricingModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="serviceModalLabel">
-                                    <?= isset($edit_service) ? 'Edit Service' : 'Add New Service' ?>
+                                <h5 class="modal-title" id="pricingModalLabel">
+                                    <?= isset($edit_pricing) ? 'Edit Pricing Item' : 'Add New Pricing Item' ?>
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form method="POST" action="services.php">
+                            <form method="POST" action="pricing.php">
                                 <div class="modal-body">
-                                    <?php if (isset($edit_service)): ?>
-                                        <input type="hidden" name="id" value="<?= $edit_service['id'] ?>">
+                                    <?php if (isset($edit_pricing)): ?>
+                                        <input type="hidden" name="id" value="<?= $edit_pricing['id'] ?>">
                                     <?php endif; ?>
                                     
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Service Name *</label>
-                                        <input type="text" class="form-control" id="name" name="name" required 
-                                            value="<?= isset($edit_service) ? htmlspecialchars($edit_service['name']) : '' ?>">
+                                        <label for="service_name" class="form-label">Service Name *</label>
+                                        <input type="text" class="form-control" id="service_name" name="service_name" required 
+                                            value="<?= isset($edit_pricing) ? htmlspecialchars($edit_pricing['service_name']) : '' ?>">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="description" class="form-label">Description</label>
-                                        <textarea class="form-control" id="description" name="description" rows="4"><?= isset($edit_service) ? htmlspecialchars($edit_service['description']) : '' ?></textarea>
+                                        <label for="price" class="form-label">Price *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required 
+                                                value="<?= isset($edit_pricing) ? htmlspecialchars($edit_pricing['price']) : '' ?>">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" name="<?= isset($edit_service) ? 'update_service' : 'add_service' ?>" class="btn btn-primary">
-                                        <?= isset($edit_service) ? 'Update Service' : 'Save Service' ?>
+                                    <button type="submit" name="<?= isset($edit_pricing) ? 'update_pricing' : 'add_pricing' ?>" class="btn btn-primary">
+                                        <?= isset($edit_pricing) ? 'Update Pricing' : 'Save Pricing' ?>
                                     </button>
                                 </div>
                             </form>
@@ -337,22 +334,22 @@ if (isset($_GET['edit'])) {
     
     <script>
         // Auto-open modal if editing
-        <?php if (isset($edit_service)): ?>
+        <?php if (isset($edit_pricing)): ?>
             document.addEventListener('DOMContentLoaded', function() {
-                var serviceModal = new bootstrap.Modal(document.getElementById('serviceModal'));
-                serviceModal.show();
+                var pricingModal = new bootstrap.Modal(document.getElementById('pricingModal'));
+                pricingModal.show();
                 
                 // Focus on first input field when modal opens
-                serviceModal._element.addEventListener('shown.bs.modal', function () {
-                    document.getElementById('name').focus();
+                pricingModal._element.addEventListener('shown.bs.modal', function () {
+                    document.getElementById('service_name').focus();
                 });
             });
         <?php endif; ?>
 
-        // Focus on first input field when adding new service
-        document.getElementById('serviceModal').addEventListener('shown.bs.modal', function () {
-            if (!<?= isset($edit_service) ? 'true' : 'false' ?>) {
-                document.getElementById('name').focus();
+        // Focus on first input field when adding new pricing item
+        document.getElementById('pricingModal').addEventListener('shown.bs.modal', function () {
+            if (!<?= isset($edit_pricing) ? 'true' : 'false' ?>) {
+                document.getElementById('service_name').focus();
             }
         });
     </script>

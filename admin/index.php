@@ -1,13 +1,40 @@
 <?php
 session_start();
 
-include  '../config/db.php';
-if (!isset($_SESSION['admin_id']) ) {
-    header("Location: login.php");
+include '../config/db.php';
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login");
     exit();
 }
 
+// Get counts from database with error handling
+$pending_appointments = 0;
+$weekly_messages = 0;
+$total_services = 0;
 
+// Pending appointments count
+$query = "SELECT COUNT(*) as count FROM appointments WHERE status = 'pending'";
+$result = mysqli_query($conn, $query);
+if ($result) {
+    $row = mysqli_fetch_assoc($result);
+    $pending_appointments = $row['count'];
+}
+
+// Weekly messages count
+$query = "SELECT COUNT(*) as count FROM contact_messages WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
+$result = mysqli_query($conn, $query);
+if ($result) {
+    $row = mysqli_fetch_assoc($result);
+    $weekly_messages = $row['count'];
+}
+
+// Total services count
+$query = "SELECT COUNT(*) as count FROM services";
+$result = mysqli_query($conn, $query);
+if ($result) {
+    $row = mysqli_fetch_assoc($result);
+    $total_services = $row['count'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -16,39 +43,130 @@ if (!isset($_SESSION['admin_id']) ) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Executive Barbershop Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        /* Custom color palette */
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-secondary: #FFD700;
+            --gold-light: #F5E6B3;
+            --gold-dark: #B8860B;
+            --brown-dark: #5C4033;
+            --brown-light: #8B5A2B;
+            --black: #1A1A1A;
+            --white: #FFFFFF;
+            --gray-light: #F5F5F5;
+        }
+
         /* Custom styles */
-        .bg-indigo-700 { background-color: #4f46e5; }
-        .bg-indigo-800 { background-color: #4338ca; }
-        .bg-indigo-600 { background-color: #5b21b6; }
-        .bg-indigo-100 { background-color: #e0e7ff; }
-        .text-indigo-600 { color: #4f46e5; }
-        .hover-bg-indigo-600:hover { background-color: #5b21b6; }
-        .bg-purple-100 { background-color: #e9d5ff; }
-        .text-purple-600 { color: #7c3aed; }
-        .bg-purple-600 { background-color: #7c3aed; }
-        .progress-bar-purple { background-color: #7c3aed; }
-        .text-sm { font-size: 0.875rem; }
-        .h-2\.5 { height: 0.625rem; }
-        .rounded-full { border-radius: 9999px; }
-        .shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06); }
-        .sidebar-link.active { background-color: #4338ca; }
-        .sidebar-link:hover { background-color: #5b21b6; }
+        .bg-gold-primary { background-color: var(--gold-primary); }
+        .bg-gold-secondary { background-color: var(--gold-secondary); }
+        .bg-gold-light { background-color: var(--gold-light); }
+        .bg-gold-dark { background-color: var(--gold-dark); }
+        .bg-brown-dark { background-color: var(--brown-dark); }
+        .bg-brown-light { background-color: var(--brown-light); }
+        .bg-black { background-color: var(--black); }
+        
+        .text-gold-primary { color: var(--gold-primary); }
+        .text-gold-secondary { color: var(--gold-secondary); }
+        .text-gold-light { color: var(--gold-light); }
+        .text-gold-dark { color: var(--gold-dark); }
+        .text-brown-dark { color: var(--brown-dark); }
+        .text-brown-light { color: var(--brown-light); }
+        
+        .sidebar-link.active { background-color: var(--brown-dark); }
+        .sidebar-link:hover { background-color: var(--brown-light); }
+        
+        /* Dashboard specific styles */
+        .stat-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            border-radius: 8px;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1.5rem;
+        }
+        .recent-item {
+            transition: background-color 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .recent-item:hover {
+            background-color: var(--gray-light);
+            border-left-color: var(--gold-primary);
+        }
+        .badge-pending {
+            background-color: rgba(212, 175, 55, 0.2);
+            color: var(--brown-dark);
+        }
+        .badge-confirmed {
+            background-color: rgba(139, 90, 43, 0.2);
+            color: var(--brown-dark);
+        }
+        .badge-cancelled {
+            background-color: rgba(92, 64, 51, 0.2);
+            color: var(--brown-dark);
+        }
+        body {
+            background-color: var(--gray-light);
+        }
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .table th {
+            background-color: var(--gold-light);
+            color: var(--black);
+        }
+        .btn-outline-primary {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--gold-primary);
+            color: var(--black);
+        }
+        .btn-primary {
+            background-color: var(--gold-primary);
+            border-color: var(--gold-primary);
+            color: var(--black);
+        }
+        .btn-primary:hover {
+            background-color: var(--gold-dark);
+            border-color: var(--gold-dark);
+            color: var(--white);
+        }
+        .avatar {
+            background-color: var(--gold-primary) !important;
+            color: var(--black) !important;
+        }
     </style>
+    
 </head>
+
 <body class="bg-light">
+
     <div class="d-flex vh-100">
         <!-- Sidebar -->
-        <div class="d-none d-md-flex flex-column flex-shrink-0 bg-indigo-700 text-white" style="width: 16rem;">
-            <div class="d-flex align-items-center justify-content-center h4 p-3 bg-indigo-800">
-                <span class="fw-semibold">Exective Barbershop</span>
+        <div class="d-none d-md-flex flex-column flex-shrink-0 bg-brown-dark text-white" style="width: 16rem;">
+            <div class="d-flex align-items-center justify-content-center h4 p-3 bg-black">
+                <span class="fw-semibold text-gold-primary">Executive Barbershop</span>
             </div>
             <div class="flex-grow-1 px-3 py-4 overflow-y-auto">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a href="index" class="nav-link sidebar-link active text-white rounded py-3">
+                        <a href="index" class="nav-link sidebar-link active text-gold-secondary rounded py-3">
                             <i class="fas fa-tachometer-alt me-2"></i>
                             Dashboard
                         </a>
@@ -59,7 +177,6 @@ if (!isset($_SESSION['admin_id']) ) {
                             Contact Messages
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a href="appointments" class="nav-link sidebar-link text-white rounded py-3">
                             <i class="fas fa-headset me-2"></i>
@@ -67,23 +184,15 @@ if (!isset($_SESSION['admin_id']) ) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link sidebar-link text-white rounded py-3">
+                        <a href="services" class="nav-link sidebar-link text-white rounded py-3">
                             <i class="fas fa-project-diagram me-2"></i>
                             Services
                         </a>
                     </li>
-                    
                     <li class="nav-item">
-                        <a href="#" class="nav-link sidebar-link text-white rounded py-3">
-                            <i class="fas fa-users me-2"></i>
-                            Team
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="#" class="nav-link sidebar-link text-white rounded py-3">
-                            <i class="fas fa-file-alt me-2"></i>
-                            Reports
+                        <a href="pricing" class="nav-link sidebar-link text-white rounded py-3">
+                            <i class="fas fa-money-bill-wave me-2"></i>
+                            Pricing
                         </a>
                     </li>
                     <li class="nav-item">
@@ -93,70 +202,49 @@ if (!isset($_SESSION['admin_id']) ) {
                         </a>
                     </li>
                 </ul>
-                <div class="mt-auto mb-4">
-                    <div class="p-3 bg-indigo-800 rounded">
-                        <p class="text-sm">Upgrade to <span class="fw-semibold">Pro</span> for more features!</p>
-                        <button class="w-100 btn btn-light btn-sm text-indigo-600 mt-2">Upgrade Now</button>
-                    </div>
-                </div>
             </div>
         </div>
 
         <!-- Mobile Sidebar (Offcanvas) -->
         <div class="d-md-none">
-            <div class="offcanvas offcanvas-start text-white" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel" style="background-color: #4f46e5;">
-                <div class="offcanvas-header bg-indigo-800">
-                    <h5 class="offcanvas-title text-white" id="mobileSidebarLabel">Executive Barbershop</h5>
+            <div class="offcanvas offcanvas-start text-white" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel" style="background-color: var(--brown-dark);">
+                <div class="offcanvas-header bg-black">
+                    <h5 class="offcanvas-title text-gold-primary" id="mobileSidebarLabel">Executive Barbershop</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
                     <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a href="index" class="nav-link sidebar-link active text-white rounded py-3">
-                            <i class="fas fa-tachometer-alt me-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="contacts" class="nav-link sidebar-link text-white rounded py-3">
-                            <i class="fas fa-comment me-2"></i>
-                            Contact Messages
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="appointments" class="nav-link sidebar-link text-white rounded py-3">
-                            <i class="fas fa-headset me-2"></i>
-                            Appointments
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link sidebar-link text-white rounded py-3">
-                            <i class="fas fa-project-diagram me-2"></i>
-                            Services
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="#" class="nav-link sidebar-link text-white rounded py-3">
-                            <i class="fas fa-users me-2"></i>
-                            Team
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="#" class="nav-link sidebar-link text-white rounded py-3">
-                            <i class="fas fa-file-alt me-2"></i>
-                            Reports
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../logout.php" class="nav-link sidebar-link text-white rounded py-3">
-                            <i class="fas fa-sign-out-alt me-2"></i>
-                            Logout
-                        </a>
-                    </li>
-                </ul>
+                        <li class="nav-item">
+                            <a href="index" class="nav-link sidebar-link active text-gold-secondary rounded py-3">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="contacts" class="nav-link sidebar-link text-white rounded py-3">
+                                <i class="fas fa-comment me-2"></i>
+                                Contact Messages
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="appointments" class="nav-link sidebar-link text-white rounded py-3">
+                                <i class="fas fa-headset me-2"></i>
+                                Appointments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="services" class="nav-link sidebar-link text-white rounded py-3">
+                                <i class="fas fa-project-diagram me-2"></i>
+                                Services
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../logout.php" class="nav-link sidebar-link text-white rounded py-3">
+                                <i class="fas fa-sign-out-alt me-2"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -169,17 +257,12 @@ if (!isset($_SESSION['admin_id']) ) {
                     <button class="d-md-none btn btn-outline-secondary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <div class="input-group w-auto">
-                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
-                        <input type="text" class="form-control border-start-0" placeholder="Search..." style="max-width: 200px;">
-                    </div>
+                    <h1 class="h5 mb-0 text-brown-dark">Executive Barbershop</h1>        
                 </div>
-                <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-outline-secondary"><i class="fas fa-bell"></i></button>
-                    <button class="btn btn-outline-secondary"><i class="fas fa-envelope"></i></button>
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle me-2" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User profile" width="32" height="32">
-                        <span class="d-none d-md-inline text-sm">John Doe</span>
+                <div class="d-flex align-items-center gap-3">                    
+                    <div class="d-flex align-items-center">                        
+                        <span class="avatar me-2" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">AD</span>
+                        <span class="d-none d-md-inline text-sm text-brown-dark">Admin</span>   
                     </div>
                 </div>
             </header>
@@ -187,227 +270,159 @@ if (!isset($_SESSION['admin_id']) ) {
             <!-- Main content area -->
             <main class="flex-grow-1 overflow-y-auto p-4">
                 <div class="mb-4">
-                    <h1 class="h2 fw-bold text-dark">Dashboard</h1>
-                    <p class="text-muted">Welcome back, John! Here's what's happening with your projects.</p>
+                    <h1 class="h2 fw-bold text-brown-dark">Dashboard Overview</h1>
+                    <p class="text-muted">Welcome back! Here's what's happening with your barbershop.</p>
                 </div>
 
                 <!-- Stats cards -->
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-4">
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                    <!-- Pending Appointments Card -->
                     <div class="col">
-                        <div class="card shadow">
-                            <div class="card-body d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="text-muted text-sm">Active Projects</p>
-                                    <p class="h3 mb-0">12</p>
+                        <div class="card stat-card shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted text-uppercase mb-2">Pending Appointments</h6>
+                                        <h2 class="mb-0 text-brown-dark"><?php echo $pending_appointments; ?></h2>
+                                    </div>
+                                    <div class="stat-icon bg-gold-light text-gold-dark">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
                                 </div>
-                                <div class="p-3 rounded-circle bg-indigo-100 text-indigo-600">
-                                    <i class="fas fa-project-diagram"></i>
+                                <div class="mt-3">
+                                    <a href="appointments" class="btn btn-sm btn-outline-primary">View Appointments</a>
                                 </div>
                             </div>
-                            <div class="card-footer bg-transparent border-0 text-success text-sm">+2 from last week</div>
                         </div>
                     </div>
+                    
+                    <!-- Weekly Messages Card -->
                     <div class="col">
-                        <div class="card shadow">
-                            <div class="card-body d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="text-muted text-sm">Tasks Completed</p>
-                                    <p class="h3 mb-0">48</p>
+                        <div class="card stat-card shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted text-uppercase mb-2">Weekly Messages</h6>
+                                        <h2 class="mb-0 text-brown-dark"><?php echo $weekly_messages; ?></h2>
+                                    </div>
+                                    <div class="stat-icon bg-gold-light text-gold-dark">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
                                 </div>
-                                <div class="p-3 rounded-circle bg-success-subtle text-success">
-                                    <i class="fas fa-check-circle"></i>
+                                <div class="mt-3">
+                                    <a href="contacts" class="btn btn-sm btn-outline-primary">View Messages</a>
                                 </div>
                             </div>
-                            <div class="card-footer bg-transparent border-0 text-success text-sm">+5 from yesterday</div>
                         </div>
                     </div>
+                    
+                    <!-- Services Card -->
                     <div class="col">
-                        <div class="card shadow">
-                            <div class="card-body d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="text-muted text-sm">Team Members</p>
-                                    <p class="h3 mb-0">8</p>
+                        <div class="card stat-card shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted text-uppercase mb-2">Total Services</h6>
+                                        <h2 class="mb-0 text-brown-dark"><?php echo $total_services; ?></h2>
+                                    </div>
+                                    <div class="stat-icon bg-gold-light text-gold-dark">
+                                        <i class="fas fa-cut"></i>
+                                    </div>
                                 </div>
-                                <div class="p-3 rounded-circle bg-info-subtle text-info">
-                                    <i class="fas fa-users"></i>
+                                <div class="mt-3">
+                                    <a href="services" class="btn btn-sm btn-outline-primary">Manage Services</a>
                                 </div>
                             </div>
-                            <div class="card-footer bg-transparent border-0 text-muted text-sm">No change</div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card shadow">
-                            <div class="card-body d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="text-muted text-sm">Upcoming Deadlines</p>
-                                    <p class="h3 mb-0">3</p>
-                                </div>
-                                <div class="p-3 rounded-circle bg-danger-subtle text-danger">
-                                    <i class="fas fa-calendar-times"></i>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-transparent border-0 text-danger text-sm">Due this week</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Projects and Recent Activity -->
+                <!-- Recent Activity Section -->
                 <div class="row g-4">
-                    <!-- Projects Table -->
+                    <!-- Recent Appointments -->
                     <div class="col-lg-8">
-                        <div class="card shadow">
-                            <div class="card-header border-bottom">
-                                <h2 class="h5 mb-0">Recent Projects</h2>
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h2 class="h5 mb-0 text-brown-dark">Recent Appointments</h2>
+                                    <a href="appointments" class="btn btn-sm btn-outline-primary">View All</a>
+                                </div>
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th scope="col">Project</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Due Date</th>
-                                            <th scope="col">Progress</th>
-                                            <th scope="col" class="text-end">Actions</th>
+                                            <th>Client</th>
+                                            <th>Service</th>
+                                            <th>Date & Time</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="p-2 rounded bg-indigo-100 text-indigo-600 me-3">
-                                                        <i class="fas fa-box-open"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Website Redesign</div>
-                                                        <div class="text-muted text-sm">Marketing</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-success-subtle text-success">Active</span>
-                                            </td>
-                                            <td class="text-muted text-sm">May 15, 2023</td>
-                                            <td>
-                                                <div class="progress h-2-5">
-                                                    <div class="progress-bar bg-indigo-600" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <span class="text-muted text-sm">65%</span>
-                                            </td>
-                                            <td class="text-end">
-                                                <a href="#" class="text-indigo-600">View</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="p-2 rounded bg-info-subtle text-info me-3">
-                                                        <i class="fas fa-mobile-alt"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Mobile App</div>
-                                                        <div class="text-muted text-sm">Development</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-warning-subtle text-warning">Pending</span>
-                                            </td>
-                                            <td class="text-muted text-sm">Jun 1, 2023</td>
-                                            <td>
-                                                <div class="progress h-2-5">
-                                                    <div class="progress-bar bg-info" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <span class="text-muted text-sm">30%</span>
-                                            </td>
-                                            <td class="text-end">
-                                                <a href="#" class="text-indigo-600">View</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="p-2 rounded bg-purple-100 text-purple-600 me-3">
-                                                        <i class="fas fa-chart-line"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Market Analysis</div>
-                                                        <div class="text-muted text-sm">Research</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-success-subtle text-success">Active</span>
-                                            </td>
-                                            <td class="text-muted text-sm">Apr 28, 2023</td>
-                                            <td>
-                                                <div class="progress h-2-5">
-                                                    <div class="progress-bar progress-bar-purple" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <span class="text-muted text-sm">85%</span>
-                                            </td>
-                                            <td class="text-end">
-                                                <a href="#" class="text-indigo-600">View</a>
-                                            </td>
-                                        </tr>
+                                        <?php
+                                        $recent_appointments = mysqli_query($conn, "SELECT a.*, s.name as service_name 
+                                                                                  FROM appointments a
+                                                                                  JOIN services s ON a.service_id = s.id
+                                                                                  ORDER BY a.appointment_date DESC 
+                                                                                  LIMIT 5");
+                                        
+                                        if ($recent_appointments && mysqli_num_rows($recent_appointments) > 0) {
+                                            while ($appointment = mysqli_fetch_assoc($recent_appointments)) {
+                                                $status_class = '';
+                                                if ($appointment['status'] == 'pending') $status_class = 'badge-pending';
+                                                if ($appointment['status'] == 'confirmed') $status_class = 'badge-confirmed';
+                                                if ($appointment['status'] == 'cancelled') $status_class = 'badge-cancelled';
+                                                
+                                                echo "<tr class='recent-item'>";
+                                                echo "<td>{$appointment['client_name']}</td>";
+                                                echo "<td>{$appointment['service_name']}</td>";
+                                                echo "<td>" . date('M j, Y g:i A', strtotime($appointment['appointment_date'])) . "</td>";
+                                                echo "<td><span class='badge $status_class'>" . ucfirst($appointment['status']) . "</span></td>";
+                                                echo "<td class='text-end'><a href='appointments' class='btn btn-sm btn-outline-primary'>View</a></td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='5' class='text-center py-4 text-muted'>No recent appointments</td></tr>";
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="card-footer bg-transparent border-top">
-                                <a href="#" class="text-indigo-600 text-sm">View all projects</a>
-                            </div>
                         </div>
                     </div>
-
-                    <!-- Recent Activity -->
+                    
+                    <!-- Recent Messages -->
                     <div class="col-lg-4">
-                        <div class="card shadow">
-                            <div class="card-header border-bottom">
-                                <h2 class="h5 mb-0">Recent Activity</h2>
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h2 class="h5 mb-0 text-brown-dark">Recent Messages</h2>
+                                    <a href="contacts" class="btn btn-sm btn-outline-primary">View All</a>
+                                </div>
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start">
-                                        <img class="rounded-circle me-3" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" width="40" height="40">
-                                        <div>
-                                            <p class="fw-medium mb-1 text-sm">Jane Cooper</p>
-                                            <p class="text-muted text-sm mb-1">Completed "Homepage redesign" task</p>
-                                            <p class="text-muted" style="font-size: 0.75rem;">2 hours ago</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start">
-                                        <img class="rounded-circle me-3" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" width="40" height="40">
-                                        <div>
-                                            <p class="fw-medium mb-1 text-sm">Michael Smith</p>
-                                            <p class="text-muted text-sm mb-1">Commented on "Mobile app wireframes"</p>
-                                            <p class="text-muted" style="font-size: 0.75rem;">5 hours ago</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start">
-                                        <img class="rounded-circle me-3" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" width="40" height="40">
-                                        <div>
-                                            <p class="fw-medium mb-1 text-sm">Alex Johnson</p>
-                                            <p class="text-muted text-sm mb-1">Uploaded new files to "Website assets"</p>
-                                            <p class="text-muted" style="font-size: 0.75rem;">1 day ago</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start">
-                                        <img class="rounded-circle me-3" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" width="40" height="40">
-                                        <div>
-                                            <p class="fw-medium mb-1 text-sm">Sarah Williams</p>
-                                            <p class="text-muted text-sm mb-1">Created new project "Product launch"</p>
-                                            <p class="text-muted" style="font-size: 0.75rem;">2 days ago</p>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="card-footer bg-transparent border-top">
-                                <a href="#" class="text-indigo-600 text-sm">View all activity</a>
+                            <div class="list-group list-group-flush">
+                                <?php
+                                $recent_messages = mysqli_query($conn, "SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 4");
+                                
+                                if ($recent_messages && mysqli_num_rows($recent_messages) > 0) {
+                                    while ($message = mysqli_fetch_assoc($recent_messages)) {
+                                        $message_preview = strlen($message['message']) > 50 ? substr($message['message'], 0, 50) . '...' : $message['message'];
+                                        
+                                        echo "<a href='contacts' class='list-group-item list-group-item-action recent-item'>";
+                                        echo "<div class='d-flex justify-content-between align-items-start'>";
+                                        echo "<div>";
+                                        echo "<h6 class='mb-1'>{$message['name']}</h6>";
+                                        echo "<p class='mb-1 text-muted small'>$message_preview</p>";
+                                        echo "</div>";
+                                        echo "<small class='text-muted'>" . date('M j', strtotime($message['created_at'])) . "</small>";
+                                        echo "</div>";
+                                        echo "</a>";
+                                    }
+                                } else {
+                                    echo "<div class='list-group-item text-center py-4 text-muted'>No recent messages</div>";
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -416,6 +431,8 @@ if (!isset($_SESSION['admin_id']) ) {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>

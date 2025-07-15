@@ -11,8 +11,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Favicons - Place favicon.ico in the root directory -->
-    <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="./assets/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./assets/img/favicon.ico" type="image/x-icon">
 
     
 	<!-- Google Fonts -->
@@ -28,16 +28,16 @@
     <!-- Bootstrap -->    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">    
     <!-- Fontawesome Icon -->
-    <link rel="stylesheet" href="../assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="./assets/css/fontawesome.min.css">
     <!-- Layerslider -->
-    <link rel="stylesheet" href="../assets/css/layerslider.min.css">
+    <link rel="stylesheet" href="./assets/css/layerslider.min.css">
     <!-- jQuery DatePicker -->
-    <link rel="stylesheet" href="../assets/css/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="./assets/css/jquery.datetimepicker.min.css">
     <!-- Magnific Popup -->
-    <link rel="stylesheet" href="../assets/css/magnific-popup.min.css">
+    <link rel="stylesheet" href="./assets/css/magnific-popup.min.css">
     <!-- Slick Slider -->
-    <link rel="stylesheet" href="../assets/css/slick.min.css">
+    <link rel="stylesheet" href="./assets/css/slick.min.css">
     <!-- Theme Custom CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 
 </head>

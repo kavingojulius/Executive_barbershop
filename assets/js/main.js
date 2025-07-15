@@ -10,14 +10,14 @@
   });
 
   /*---------- 02. Preloader ----------*/
-  if ($(".preloader").length > 0) {
-    $(".preloaderCls").each(function () {
-      $(this).on("click", function (e) {
-        e.preventDefault();
-        $(".preloader").css("display", "none");
-      });
-    });
-  }
+  // if ($(".preloader").length > 0) {
+  //   $(".preloaderCls").each(function () {
+  //     $(this).on("click", function (e) {
+  //       e.preventDefault();
+  //       $(".preloader").css("display", "none");
+  //     });
+  //   });
+  // }
 
   /*---------- 03. Mobile Menu Active ----------*/
   $.fn.vsmobilemenu = function (options) {

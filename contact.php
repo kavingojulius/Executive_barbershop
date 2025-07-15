@@ -3,10 +3,10 @@
 
 <?php
 session_start();
-include_once("../includes/head.php");
+include_once("./includes/head.php");
 
 // Include database configuration
-include_once("../config/db.php");
+include_once("./config/db.php");
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -53,17 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <body>
-    <?php include_once("../includes/navbar.php") ?>
+    <?php include_once("./includes/navbar.php") ?>
 
     <!-- Breadcrumb -->
      
-    <div class="breadcumb-wrapper" data-bg-src="../assets/img/breadcumb/breadcumb-bg-4.jpg">
+    <div class="breadcumb-wrapper" data-bg-src="./assets/best/backg.jpg">
         <div class="container z-index-common">
             <div class="breadcumb-content">
                 <h1 class="breadcumb-title">Contact <span class="inner-text">Us</span></h1>
                 <div class="breadcumb-menu-wrap">
                     <ul class="breadcumb-menu">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="./">Home</a></li>
                         <li>Contact <span class="inner-text">Us</span></li>
                     </ul>
                 </div>
@@ -72,6 +72,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <!-- Contact Form Area -->
+
+    <style>
+        /* Contact Form Styling */
+        .form-style6 input,
+        .form-style6 textarea {
+            color: #333 !important; /* Dark gray text */
+            background-color: #fff !important; /* White background */
+            border: 1px solid #ddd !important;
+            padding: 10px 15px !important;
+            width: 100% !important;
+            margin-bottom: 15px !important;
+            font-size: 16px !important;
+        }
+        
+        /* Textarea specific styling */
+        .form-style6 textarea {
+            min-height: 120px !important;
+            resize: vertical !important;
+        }
+        
+        /* Placeholder text */
+        .form-style6 input::placeholder,
+        .form-style6 textarea::placeholder {
+            color: #666 !important;
+            opacity: 1 !important;
+        }
+        
+        /* Focus states */
+        .form-style6 input:focus,
+        .form-style6 textarea:focus {
+            outline: none !important;
+            border-color: #666 !important;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.1) !important;
+        }
+        
+        /* Submit button */
+        .form-style6 .vs-btn {
+            cursor: pointer;
+            background-color: #333 !important; /* Dark button */
+            color: white !important;
+            border: none !important;
+            padding: 12px 25px !important;
+            font-weight: bold !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .form-style6 .vs-btn:hover {
+            background-color: #555 !important;
+        }
+        
+        /* Remove conflicting classes */
+        .form-style6 .form-control {
+            all: unset !important;
+        }
+    </style>
 
     <section class="space">
         <div class="container">
@@ -102,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="email" name="email" id="email" placeholder="Your Email*">
                         </div>
                         <div class="form-group">
-                            <input type="text" name="subject" id="subject"  class="form-control " placeholder="Service to book* (e.g., Haircut, Beard Trim, Styling)">                            
+                            <input type="text" name="subject" id="subject" placeholder="Service to book* (e.g., Haircut, Beard Trim, Styling)">                            
                         </div>
                         <div class="form-group">
                             <textarea name="message" id="message" placeholder="Tell us more about your service request*"></textarea>
@@ -120,17 +175,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="tr">
                             <div class="tb-col">
                                 <span class="th">Address :</span>
-                                <span class="td">Levo Petrol Station, next to Club Step Two, Embu</span>
+                                <span class="td">Lexo Petrol Station, next to Club Step Two, Embu</span>
                             </div>
                         </div>
                         <div class="tr">
                             <div class="tb-col">
                                 <span class="th">email :</span>
-                                <span class="td"><a href="kings2023@gmail.com" class="text-inherit">kings2023@gmail.com</a></span>
+                                <span class="td"><a href="mailto:kings2023@gmail.com" class="text-inherit">kings2023@gmail.com</a></span>
                             </div>
                             <div class="tb-col">
                                 <span class="th">time : </span>
-                                <span class="td">08 : 00 - 19 : 00</span>
+                                <span class="td">09 : 00 am -  8 : 00 pm</span>
                             </div>
                         </div>
                     </div>
@@ -146,7 +201,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </section>
 
     <!-- Footer -->
-    <?php include '../includes/footer1.php'; ?>
+    <?php include './includes/footer.php'; ?>
 
    
 </body>

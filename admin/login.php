@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verify the password
         if (password_verify($password, $admin['password'])) {
             $_SESSION['admin_id'] = $admin['id'];            
-            header("Location: index.php");
+            header("Location: ./");
             exit();
         }else {
             $message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">Wrong password! <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';

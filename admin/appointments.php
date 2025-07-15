@@ -20,6 +20,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     header("Location: appointments.php");
     exit();
 }
+// Handle delete action
+if (isset($_GET['delete'])) {       
+    $id = $_GET['delete'];
+    $stmt = $conn->prepare("DELETE FROM appointment_requests WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    
+    if ($stmt->affected_rows > 0) {
+        $_SESSION['message'] = "Appointment deleted successfully!";
+    } else {
+        $_SESSION['message'] = "Failed to delete appointment.";
+    }
+    header("Location: appointments.php");
+    exit();
+}
 
 // Fetch all appointments
 $appointments = [];
@@ -276,6 +291,151 @@ if (isset($_GET['view'])) {
             padding: 1rem;
             margin-top: 1rem;
         }
+
+        /* Responsive Additions */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+
+        /* Number cell styling */
+        .serial-number {
+            position: sticky;
+            left: 0;
+            background-color: white;
+            z-index: 1;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .table th, .table td {
+                padding: 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn-icon-sm {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+            }
+            
+            .text-ellipsis {
+                max-width: 120px;
+            }
+
+            .avatar {
+                width: 20px;
+                height: 20px;
+                font-size: 0.625rem;
+            }
+
+            .date-badge {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 576px) {
+            .table-container {
+                border-radius: 0;
+                box-shadow: none;
+                border: 1px solid #dee2e6;
+            }
+
+            .table-responsive:after {
+                content: '→';
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #666;
+                font-size: 1.5rem;
+                opacity: 0.5;
+                animation: bounceRight 2s infinite;
+            }
+            
+            @keyframes bounceRight {
+                0%, 100% { transform: translateY(-50%) translateX(0); }
+                50% { transform: translateY(-50%) translateX(5px); }
+            }
+        }
+
+        /* Very small screens - stacked layout */
+        @media (max-width: 300px) {
+            .table-responsive:after {
+                display: none;
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            tr {
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                position: relative;
+            }
+            
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                white-space: normal;
+                text-align: left;
+            }
+            
+            td:before {
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                content: attr(data-label);
+            }
+            
+            .text-ellipsis {
+                max-width: none;
+                white-space: normal;
+            }
+            
+            .serial-number {
+                position: static;
+                background-color: transparent;
+            }
+
+            td:first-child {
+                display: none;
+            }
+
+            .btn-icon-sm {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background-color: var(--indigo-700);
+                color: white;
+            }
+        }
+
+        /* Tiny screens - further adjustments */
+        @media (max-width: 360px) {
+            td {
+                padding-left: 40%;
+            }
+            
+            td:before {
+                width: 35%;
+                font-size: 0.7rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -303,15 +463,10 @@ if (isset($_GET['view'])) {
                 <div class="d-flex align-items-center">
                     <button class="d-md-none btn btn-outline-secondary btn-icon btn-sm me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                         <i class="fas fa-bars"></i>
-                    </button>
-                    <div class="input-group" style="width: 220px;">
-                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
-                        <input type="text" class="form-control border-start-0" placeholder="Search...">
-                    </div>
+                    </button>     
+                    <h1 class="h5 mb-0">Executive Barbershop</h1>               
                 </div>
-                <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-outline-secondary btn-icon btn-sm"><i class="fas fa-bell"></i></button>
-                    <button class="btn btn-outline-secondary btn-icon btn-sm"><i class="fas fa-envelope"></i></button>
+                <div class="d-flex align-items-center gap-2">                    
                     <div class="d-flex align-items-center ms-2">
                         <span class="avatar me-2">AD</span>
                         <span class="d-none d-md-inline text-sm">Admin</span>
@@ -323,13 +478,13 @@ if (isset($_GET['view'])) {
             <main class="flex-grow-1 overflow-y-auto p-3">
                 <div class="mb-3 d-flex justify-content-between align-items-center">
                     <h1 class="page-title mb-0">Appointment Requests</h1>
-                    <div>
+                    <!-- <div>
                         <button class="btn btn-sm btn-outline-secondary me-2"><i class="fas fa-filter me-1"></i> Filter</button>
                         <button class="btn btn-sm btn-primary"><i class="fas fa-download me-1"></i> Export</button>
-                    </div>
+                    </div> -->
                 </div>
 
-                <div class="table-container">
+                <div class="table-container table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
@@ -362,8 +517,8 @@ if (isset($_GET['view'])) {
                                     $initials = implode('', array_map(function($n) { return $n[0]; }, explode(' ', $appointment['name'])));
                                     ?>
                                     <tr>
-                                        <td class="serial-number"><?= $index + 1 ?></td>
-                                        <td>
+                                        <td class="serial-number" data-label="#"> <?= $index + 1 ?></td>
+                                        <td data-label="Client">
                                             <div class="d-flex align-items-center">
                                                 <span class="avatar me-2"><?= substr($initials, 0, 2) ?></span>
                                                 <div>
@@ -372,8 +527,8 @@ if (isset($_GET['view'])) {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><?= htmlspecialchars($appointment['phone_number']) ?></td>
-                                        <td>
+                                        <td data-label="Contact"><?= htmlspecialchars($appointment['phone_number']) ?></td>
+                                        <td data-label="Date & Time">
                                             <div class="date-badge">
                                                 <i class="far fa-calendar-alt me-1"></i>
                                                 <?= date("M d, Y", strtotime($appointment['appointment_date'])) ?>
@@ -382,20 +537,20 @@ if (isset($_GET['view'])) {
                                                 <?= date("h:i A", strtotime($appointment['appointment_date'])) ?>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td data-label="Subject">
                                             <span class="text-ellipsis" style="max-width: 200px;" title="<?= htmlspecialchars($appointment['subject']) ?>">
                                                 <?= htmlspecialchars($appointment['subject']) ?>
                                             </span>
                                         </td>
-                                        <td>
+                                        <td data-label="Created">
                                             <div class="text-muted small">
                                                 <?= date("M d, Y", strtotime($appointment['created_at'])) ?>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td data-label="Status">
                                             <span class="badge-status <?= $badgeClass ?>"><?= $statusText ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Actions">
                                             <div class="d-flex gap-1">
                                                 <a href="appointments.php?view=<?= $appointment['id'] ?>" class="btn btn-sm btn-outline-secondary btn-icon btn-icon-sm" title="View Details">
                                                     <i class="fas fa-eye"></i>
@@ -403,6 +558,9 @@ if (isset($_GET['view'])) {
                                                 <a href="appointments.php?edit=<?= $appointment['id'] ?>" class="btn btn-sm btn-outline-primary btn-icon btn-icon-sm" title="Edit Status">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
+                                                <a href="appointments.php?delete=<?= $appointment['id'] ?>" class="btn btn-sm btn-outline-danger btn-icon btn-icon-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this service?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
                                             </div>
                                         </td>
                                     </tr>
