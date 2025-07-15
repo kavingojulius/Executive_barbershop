@@ -42,7 +42,7 @@ if ($result) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Barbershop Dashboard</title>
+    <title>King's Executive Barbershop Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -161,12 +161,12 @@ if ($result) {
         <!-- Sidebar -->
         <div class="d-none d-md-flex flex-column flex-shrink-0 bg-brown-dark text-white" style="width: 16rem;">
             <div class="d-flex align-items-center justify-content-center h4 p-3 bg-black">
-                <span class="fw-semibold text-gold-primary">Executive Barbershop</span>
+                <span class="fw-semibold text-gold-primary">King's Barbershop</span>
             </div>
             <div class="flex-grow-1 px-3 py-4 overflow-y-auto">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a href="index" class="nav-link sidebar-link active text-gold-secondary rounded py-3">
+                        <a href="index" class="nav-link sidebar-link text-gold-secondary rounded py-3">
                             <i class="fas fa-tachometer-alt me-2"></i>
                             Dashboard
                         </a>
@@ -209,13 +209,13 @@ if ($result) {
         <div class="d-md-none">
             <div class="offcanvas offcanvas-start text-white" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel" style="background-color: var(--brown-dark);">
                 <div class="offcanvas-header bg-black">
-                    <h5 class="offcanvas-title text-gold-primary" id="mobileSidebarLabel">Executive Barbershop</h5>
+                    <h5 class="offcanvas-title text-gold-primary" id="mobileSidebarLabel">King's Barbershop</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a href="index" class="nav-link sidebar-link active text-gold-secondary rounded py-3">
+                            <a href="index" class="nav-link sidebar-link text-gold-secondary rounded py-3">
                                 <i class="fas fa-tachometer-alt me-2"></i>
                                 Dashboard
                             </a>
@@ -239,6 +239,12 @@ if ($result) {
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="pricing" class="nav-link sidebar-link text-white rounded py-3">
+                                <i class="fas fa-money-bill-wave me-2"></i>
+                                Pricing
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="../logout.php" class="nav-link sidebar-link text-white rounded py-3">
                                 <i class="fas fa-sign-out-alt me-2"></i>
                                 Logout
@@ -257,7 +263,7 @@ if ($result) {
                     <button class="d-md-none btn btn-outline-secondary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1 class="h5 mb-0 text-brown-dark">Executive Barbershop</h1>        
+                    <h1 class="h5 mb-0 text-brown-dark">King's Barbershop</h1>        
                 </div>
                 <div class="d-flex align-items-center gap-3">                    
                     <div class="d-flex align-items-center">                        

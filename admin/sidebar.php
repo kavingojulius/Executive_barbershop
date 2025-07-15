@@ -60,7 +60,7 @@
 
 <div class="d-none d-md-flex flex-column flex-shrink-0 sidebar" style="width: 16rem;">
     <div class="d-flex align-items-center justify-content-center h4 p-3 sidebar-header">
-        <span class="fw-semibold">Executive Barbershop</span>
+        <span class="fw-semibold">King's Barbershop</span>
     </div>
     <div class="flex-grow-1 px-3 py-4 overflow-y-auto">
         <ul class="nav flex-column">
@@ -93,7 +93,7 @@
                     <i class="fas fa-project-diagram me-2"></i>
                     Pricing
                 </a>
-            </li>
+            </li>            
             <li class="nav-item">
                 <a href="../logout.php" class="nav-link sidebar-link rounded py-3">
                     <i class="fas fa-sign-out-alt me-2"></i>
@@ -108,13 +108,13 @@
 <div class="d-md-none">
     <div class="offcanvas offcanvas-start text-white offcanvas-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
         <div class="offcanvas-header offcanvas-sidebar-header">
-            <h5 class="offcanvas-title" id="mobileSidebarLabel">Executive Barbershop</h5>
+            <h5 class="offcanvas-title" id="mobileSidebarLabel">King's Barbershop</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="index" class="nav-link sidebar-link active rounded py-3">
+                    <a href="index" class="nav-link sidebar-link rounded py-3">
                         <i class="fas fa-tachometer-alt me-2"></i>
                         Dashboard
                     </a>
@@ -135,6 +135,12 @@
                     <a href="services" class="nav-link sidebar-link rounded py-3">
                         <i class="fas fa-project-diagram me-2"></i>
                         Services
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pricing" class="nav-link sidebar-link rounded py-3">
+                        <i class="fas fa-money-bill-wave me-2"></i>
+                        Pricing
                     </a>
                 </li>
                 <li class="nav-item">

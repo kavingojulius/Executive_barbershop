@@ -213,7 +213,7 @@ if (isset($_GET['edit'])) {
                     <button class="d-md-none btn btn-outline-secondary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1 class="h5 mb-0">Executive Barbershop</h1>
+                    <h1 class="h5 mb-0">King's Barbershop</h1>
                 </div>
                 <div class="d-flex align-items-center gap-3">                    
                     <div class="d-flex align-items-center">                        
@@ -267,7 +267,7 @@ if (isset($_GET['edit'])) {
                                             <tr>
                                                 <td class="number-cell"><?= $index + 1 ?></td>
                                                 <td><?= htmlspecialchars($item['service_name']) ?></td>
-                                                <td class="price-cell">$<?= number_format($item['price'], 2) ?></td>
+                                                <td class="price-cell">Ksh:<?= number_format($item['price'], 2) ?></td>
                                                 <td>
                                                     <a href="pricing.php?edit=<?= $item['id'] ?>" class="btn btn-sm btn-outline-primary me-2" title="Edit">
                                                         <i class="fas fa-edit"></i>

@@ -71,7 +71,7 @@ if (isset($_GET['view'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Management</title>
+    <title>King's Executive Barbershop Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -464,7 +464,7 @@ if (isset($_GET['view'])) {
                     <button class="d-md-none btn btn-outline-secondary btn-icon btn-sm me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                         <i class="fas fa-bars"></i>
                     </button>     
-                    <h1 class="h5 mb-0">Executive Barbershop</h1>               
+                    <h1 class="h5 mb-0">King's Barbershop</h1>               
                 </div>
                 <div class="d-flex align-items-center gap-2">                    
                     <div class="d-flex align-items-center ms-2">
