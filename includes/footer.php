@@ -12,7 +12,7 @@
                             <p class="footer-info">
                                 <i class="fal fa-map-marker-alt text-theme me-2"></i> Lexo Petrol Station, next to Club Step Two, Embu<br>
                                 <a href="tel:+01234567890" class="text-inherit"><i class="far fa-phone-alt text-theme me-2"></i>0704843035 / 0727656828</a> <br>
-                                <a class="text-inherit" href="mailto:info@example.com"><i class="fal fa-envelope text-theme me-2"></i>kings2023@gmail.com</a>
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=kings2023@gmail.com" target="_blank" class="text-inherit"><i class="fal fa-envelope text-theme me-2"></i>kings2023@gmail.com</a>
                             </p>
                             <h4 class="fs-22 mb-2">Open Hours</h4>
                             <p class="footer-time">Monday to Saturday <span class="time">09:00 am - 8:00 pm</span></p>
@@ -63,7 +63,7 @@
                 <div class="text-center py-3">
                     <p class="m-0">
                         Copyright <i class="far fa-copyright"></i> 2025 
-                        <a href="./" class="text-decoration-none">Barbershop & Spa</a>. 
+                        <a href="./" class="text-decoration-none">King's Barbershop</a>. 
                         All Rights Reserved By <a href="#" class="text-decoration-none">J & K</a>
                     </p>
                 </div>

@@ -9,9 +9,6 @@ if ($result) {
     $services = $result->fetch_all(MYSQLI_ASSOC);
 }
 
-
-
-
 // Fetch pricing data
 $pricing = [];
 if ($pricing_result = $conn->query("SELECT service_name, price FROM pricing ORDER BY service_name")) {
@@ -488,145 +485,185 @@ if ($pricing_result = $conn->query("SELECT service_name, price FROM pricing ORDE
 
     <!-- About Area End -->
 
-    <!-- Gallery Area -->
     
-    <!-- <div class="position-relative space-extra-bottom">
-        <div class="gallery-shape1"></div>
-        <div class="container-fluid">
-            <div class="row gallery-slider1 vs-carousel" data-slide-show="1" data-center-mode="true" data-xl-center-mode="true" data-ml-center-mode="true" data-lg-center-mode="true" data-md-center-mode="true" data-center-padding="477px" data-xl-center-padding="320px" data-ml-center-padding="200px" data-lg-center-padding="150px" data-md-center-padding="80px">
-                <div class="col">
-                    <div class="gallery-style2">
-                        <div class="gallery-img"><img src="assets/img/gallery/gal-3-1.jpg" alt="gallery"></div>
-                        <div class="circle-btn style2">
-                            <a href="gallery-details.html" class="btn-icon"><i class="far fa-arrow-right"></i></a>
-                            <div class="btn-text">
-                                <svg viewBox="0 0 150 150">
-                                    <text>
-                                        <textPath href="#textPath">experience the ultimate grooming and relaxation</textPath>
-                                    </text>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="gallery-style2">
-                        <div class="gallery-img"><img src="assets/img/gallery/gal-3-2.jpg" alt="gallery"></div>
-                        <div class="circle-btn style2">
-                            <a href="gallery-details.html" class="btn-icon"><i class="far fa-arrow-right"></i></a>
-                            <div class="btn-text">
-                                <svg viewBox="0 0 150 150">
-                                    <text>
-                                        <textPath href="#textPath">experience the ultimate grooming and relaxation</textPath>
-                                    </text>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="gallery-style2">
-                        <div class="gallery-img"><img src="assets/img/gallery/gal-3-3.jpg" alt="gallery"></div>
-                        <div class="circle-btn style2">
-                            <a href="gallery-details.html" class="btn-icon"><i class="far fa-arrow-right"></i></a>
-                            <div class="btn-text">
-                                <svg viewBox="0 0 150 150">
-                                    <text>
-                                        <textPath href="#textPath">experience the ultimate grooming and relaxation</textPath>
-                                    </text>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="gallery-style2">
-                        <div class="gallery-img"><img src="assets/img/gallery/gal-3-4.jpg" alt="gallery"></div>
-                        <div class="circle-btn style2">
-                            <a href="gallery-details.html" class="btn-icon"><i class="far fa-arrow-right"></i></a>
-                            <div class="btn-text">
-                                <svg viewBox="0 0 150 150">
-                                    <text>
-                                        <textPath href="#textPath">experience the ultimate grooming and relaxation</textPath>
-                                    </text>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Price Plan Area -->
+    
+    <section class="pricing-section" data-bg-src="assets/img/bg/price-bg-1-1.jpg">
+        <div class="container">
+            <div class="section-header text-center wow fadeInUp">
+                <span class="section-subtitle">** Simple & Transparent **</span>
+                <h2 class="section-title">Our Services & Pricing</h2>
+                <p class="section-desc">Clear pricing for every grooming need</p>
             </div>
-            <div class="arrows-style1">
-                <button data-slick-prev=".gallery-slider1"><i class="arrow"></i>Prev</button>
-                <button data-slick-next=".gallery-slider1"><i class="arrow"></i>Next</button>
-            </div>
-        </div>
-    </div> -->
 
-    <!-- Service Area -->
-    
-    <!-- <section class=" space">
-        <div class="title-area text-center wow fadeInUp" data-wow-delay="0.2s">
-            <span class="sec-subtitle">our services</span>
-            <h2 class="sec-title">Discover Our Barbershop & Spa</h2>
-            <div class="sec-shape mb-5 pb-1"><img src="assets/img/shape/sec-shape-1.png" alt="shape"></div>
-        </div>
-        <div class="service-inner1">
-            <div class="shape-mockup jump d-none d-xxl-block" data-top="-25%" data-right="1%"><img src="assets/img/hero/hero-leaf-5.png" alt="shape"></div>
-            <div class="container-xl">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-md-6 col-lg-5 col-xxl-auto">
-                        <div class="service-style1 reverse">
-                            <div class="vs-icon"><img src="assets/img/icon/sr-i-1-1.png" alt="icon"></div>
-                            <div class="service-content">
-                                <h3 class="service-title"><a href="service-details.html" class="text-inherit">Precision Shaves</a></h3>
-                                <p class="service-text">Baby shaves, smooth shaves, and more for a clean, polished look.</p>
-                            </div>
+            <div class="pricing-table">
+                <!-- Basic Services -->
+                <div class="service-category wow fadeInUp" data-wow-delay="0.2s">
+                    <h3 class="category-title">Basic Grooming</h3>
+
+                    <div class="service-grid">
+
+                        <?php foreach ($pricing as $service): ?>
+                        <div class="service-item">
+                            <span class="service-name"><?= htmlspecialchars($service['service_name']) ?></span>
+                            <span class="service-price">ksh : <?= htmlspecialchars($service['price']) ?></span>
                         </div>
-                        <div class="service-style1 reverse">
-                            <div class="vs-icon"><img src="assets/img/icon/sr-i-1-2.png" alt="icon"></div>
-                            <div class="service-content">
-                                <h3 class="service-title"><a href="service-details.html" class="text-inherit">Hair Coloring</a></h3>
-                                <p class="service-text">Vibrant dye and color services to enhance your style.</p>
-                            </div>
-                        </div>
-                        <div class="service-style1 reverse">
-                            <div class="vs-icon"><img src="assets/img/icon/sr-i-1-3.png" alt="icon"></div>
-                            <div class="service-content">
-                                <h3 class="service-title"><a href="service-details.html" class="text-inherit">Massage Therapy</a></h3>
-                                <p class="service-text">Relax and rejuvenate with our expert massage services.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col col-xxl-auto text-center d-none d-lg-block">
-                        <img src="assets/img/bg/sr-shape-1-1.png" alt="shape" class="mt-n4">
-                    </div>
-                    <div class="col-md-6 col-lg-5 col-xxl-auto">
-                        <div class="service-style1">
-                            <div class="vs-icon"><img src="assets/img/icon/sr-i-1-4.png" alt="icon"></div>
-                            <div class="service-content">
-                                <h3 class="service-title"><a href="service-details.html" class="text-inherit">Haircuts</a></h3>
-                                <p class="service-text">Custom haircuts tailored to your style and preference.</p>
-                            </div>
-                        </div>
-                        <div class="service-style1">
-                            <div class="vs-icon"><img src="assets/img/icon/sr-i-1-5.png" alt="icon"></div>
-                            <div class="service-content">
-                                <h3 class="service-title"><a href="service-details.html" class="text-inherit">Beard Trimming</a></h3>
-                                <p class="service-text">Expert beard shaping for a sharp, groomed appearance.</p>
-                            </div>
-                        </div>
-                        <div class="service-style1">
-                            <div class="vs-icon"><img src="assets/img/icon/sr-i-1-6.png" alt="icon"></div>
-                            <div class="service-content">
-                                <h3 class="service-title"><a href="service-details.html" class="text-inherit">Facial Treatments</a></h3>
-                                <p class="service-text">Face scrubbing and masking for refreshed, healthy skin.</p>
-                            </div>
-                        </div>
+                        <?php endforeach; ?>
+                        
                     </div>
                 </div>
             </div>
+
+            <div class="text-center mt-5 wow fadeInUp" data-wow-delay="0.5s">
+                <a href="./appointment" class="book-now-btn">Book Your Appointment</a>
+            </div>
         </div>
-    </section> -->
+    </section>
+
+    <style>
+        /* Pricing Section Styles */
+        .pricing-section {
+            padding: 80px 0;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .pricing-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.92);
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-header {
+            margin-bottom: 50px;
+        }
+        
+        .section-subtitle {
+            display: block;
+            font-size: 16px;
+            color: #FF8C00;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .section-title {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: black;
+            font-weight: 700;
+        }
+        
+        .section-desc {
+            color: black;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 16px;
+        }
+        
+        /* Pricing Table */
+        .pricing-table {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .service-category {
+            margin-bottom: 40px;
+        }
+        
+        .category-title {
+            font-size: 22px;
+            color: #222;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FF8C00;
+            display: inline-block;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-left: 3px solid #FF8C00;
+        }
+        
+        .service-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-name {
+            color: #444;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .service-price {
+            color: #FF8C00;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        /* Book Now Button */
+        .book-now-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #FF8C00;
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 16px;
+            border: 2px solid #FF8C00;
+        }
+        
+        .book-now-btn:hover {
+            background: transparent;
+            color: #FF8C00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 28px;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+        
 
     <!-- Team Area -->
     
@@ -840,354 +877,7 @@ if ($pricing_result = $conn->query("SELECT service_name, price FROM pricing ORDE
             }
         }
     </style>
-
-    <!-- Price Plan Area -->
-    
-    <section class="pricing-section" data-bg-src="assets/img/bg/price-bg-1-1.jpg">
-        <div class="container">
-            <div class="section-header text-center wow fadeInUp">
-                <span class="section-subtitle">** Simple & Transparent **</span>
-                <h2 class="section-title">Our Services & Pricing</h2>
-                <p class="section-desc">Clear pricing for every grooming need</p>
-            </div>
-
-            <div class="pricing-table">
-                <!-- Basic Services -->
-                <div class="service-category wow fadeInUp" data-wow-delay="0.2s">
-                    <h3 class="category-title">Basic Grooming</h3>
-
-                    <div class="service-grid">
-
-                        <?php foreach ($pricing as $service): ?>
-                        <div class="service-item">
-                            <span class="service-name"><?= htmlspecialchars($service['service_name']) ?></span>
-                            <span class="service-price">ksh : <?= htmlspecialchars($service['price']) ?></span>
-                        </div>
-                        <?php endforeach; ?>
-                        <!-- <div class="service-item">
-                            <span class="service-name">Beard Trim & Shape</span>
-                            <span class="service-price">$18</span>
-                        </div>
-                        <div class="service-item">
-                            <span class="service-name">Hot Towel Shave</span>
-                            <span class="service-price">$22</span>
-                        </div>
-                        <div class="service-item">
-                            <span class="service-name">Haircut + Beard</span>
-                            <span class="service-price">$35</span>
-                        </div> -->
-
-                        <!-- <div class="service-item">
-                            <span class="service-name">Deluxe Haircut Package</span>
-                            <span class="service-price">$45</span>
-                        </div>
-                        <div class="service-item">
-                            <span class="service-name">Beard Spa Treatment</span>
-                            <span class="service-price">$35</span>
-                        </div>
-                        <div class="service-item">
-                            <span class="service-name">Executive Shave</span>
-                            <span class="service-price">$40</span>
-                        </div>
-                        <div class="service-item">
-                            <span class="service-name">Signature Hair & Beard</span>
-                            <span class="service-price">$65</span>
-                        </div>                   
-                        <div class="service-item">
-                            <span class="service-name">Eyebrow Grooming</span>
-                            <span class="service-price">$10</span>
-                        </div>
-                        <div class="service-item">
-                            <span class="service-name">Nose/Ear Waxing</span>
-                            <span class="service-price">$12</span>
-                        </div>
-                        <div class="service-item">
-                            <span class="service-name">Hair Color</span>
-                            <span class="service-price">$35+</span>
-                        </div>
-                        <div class="service-item">
-                            <span class="service-name">Scalp Treatment</span>
-                            <span class="service-price">$25</span>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-5 wow fadeInUp" data-wow-delay="0.5s">
-                <a href="./appointment" class="book-now-btn">Book Your Appointment</a>
-            </div>
-        </div>
-    </section>
-
-    <style>
-        /* Pricing Section Styles */
-        .pricing-section {
-            padding: 80px 0;
-            position: relative;
-            background-size: cover;
-            background-position: center;
-        }
         
-        .pricing-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.92);
-        }
-        
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .section-header {
-            margin-bottom: 50px;
-        }
-        
-        .section-subtitle {
-            display: block;
-            font-size: 16px;
-            color: #FF8C00;
-            margin-bottom: 10px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        
-        .section-title {
-            font-size: 36px;
-            margin-bottom: 15px;
-            color: black;
-            font-weight: 700;
-        }
-        
-        .section-desc {
-            color: black;
-            max-width: 600px;
-            margin: 0 auto;
-            font-size: 16px;
-        }
-        
-        /* Pricing Table */
-        .pricing-table {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .service-category {
-            margin-bottom: 40px;
-        }
-        
-        .category-title {
-            font-size: 22px;
-            color: #222;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #FF8C00;
-            display: inline-block;
-        }
-        
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-        
-        .service-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            border-left: 3px solid #FF8C00;
-        }
-        
-        .service-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .service-name {
-            color: #444;
-            font-weight: 500;
-            font-size: 16px;
-        }
-        
-        .service-price {
-            color: #FF8C00;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        
-        /* Book Now Button */
-        .book-now-btn {
-            display: inline-block;
-            padding: 15px 40px;
-            background: #FF8C00;
-            color: white;
-            border-radius: 50px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-size: 16px;
-            border: 2px solid #FF8C00;
-        }
-        
-        .book-now-btn:hover {
-            background: transparent;
-            color: #FF8C00;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 28px;
-            }
-            
-            .service-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-
-<!-- Font Awesome for icons -->
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
-
-    <!-- Product Area -->
-    
-    <!-- <section class=" space-top">
-        <div class="container">
-            <div class="row mb-5">
-                <div class="col-auto">
-                    <h2 class="sec-title mb-n2">Grooming Essentials</h2>
-                </div>
-                <div class="col align-self-end">
-                    <div class="sec-line pb-1"></div>
-                </div>
-            </div>
-            <div class="row vs-carousel" data-slide-show="4" data-ml-slide-show="3" data-lg-slide-show="3" data-md-slide-show="2">
-                <div class="col-xl-3">
-                    <div class="vs-product product-style1">
-                        <div class="product-img">
-                            <a href="shop-details.html"><img src="assets/img/product/p-1-1.png" alt="product" class="w-100"></a>
-                            <div class="actions">
-                                <a href="#" class="icon-btn"><i class="far fa-heart"></i></a>
-                                <a href="#" class="icon-btn"><i class="far fa-eye"></i></a>
-                                <a href="#" class="vs-btn style4">Add To Cart</a>
-                            </div>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-content">
-                                <h3 class="product-title"><a class="text-inherit" href="shop-details.html">Beard Oil</a></h3>
-                                <div class="product-category">
-                                    <a href="shop.html">Grooming</a>
-                                </div>
-                            </div>
-                            <span class="product-price">$10.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="vs-product product-style1">
-                        <div class="product-img">
-                            <a href="shop-details.html"><img src="assets/img/product/p-1-2.png" alt="product" class="w-100"></a>
-                            <div class="actions">
-                                <a href="#" class="icon-btn"><i class="far fa-heart"></i></a>
-                                <a href="#" class="icon-btn"><i class="far fa-eye"></i></a>
-                                <a href="#" class="vs-btn style4">Add To Cart</a>
-                            </div>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-content">
-                                <h3 class="product-title"><a class="text-inherit" href="shop-details.html">Hair Pomade</a></h3>
-                                <div class="product-category">
-                                    <a href="shop.html">Styling</a>
-                                </div>
-                            </div>
-                            <span class="product-price">$12.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="vs-product product-style1">
-                        <div class="product-img">
-                            <a href="shop-details.html"><img src="assets/img/product/p-1-3.png" alt="product" class="w-100"></a>
-                            <div class="actions">
-                                <a href="#" class="icon-btn"><i class="far fa-heart"></i></a>
-                                <a href="#" class="icon-btn"><i class="far fa-eye"></i></a>
-                                <a href="#" class="vs-btn style4">Add To Cart</a>
-                            </div>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-content">
-                                <h3 class="product-title"><a class="text-inherit" href="shop-details.html">Face Scrub</a></h3>
-                                <div class="product-category">
-                                    <a href="shop.html">Skincare</a>
-                                </div>
-                            </div>
-                            <span class="product-price">$15.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="vs-product product-style1">
-                        <div class="product-img">
-                            <a href="shop-details.html"><img src="assets/img/product/p-1-4.png" alt="product" class="w-100"></a>
-                            <div class="actions">
-                                <a href="#" class="icon-btn"><i class="far fa-heart"></i></a>
-                                <a href="#" class="icon-btn"><i class="far fa-eye"></i></a>
-                                <a href="#" class="vs-btn style4">Add To Cart</a>
-                            </div>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-content">
-                                <h3 class="product-title"><a class="text-inherit" href="shop-details.html">Hair Dye</a></h3>
-                                <div class="product-category">
-                                    <a href="shop.html">Coloring</a>
-                                </div>
-                            </div>
-                            <span class="product-price">$20.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="vs-product product-style1">
-                        <div class="product-img">
-                            <a href="shop-details.html"><img src="assets/img/product/p-1-5.png" alt="product" class="w-100"></a>
-                            <div class="actions">
-                                <a href="#" class="icon-btn"><i class="far fa-heart"></i></a>
-                                <a href="#" class="icon-btn"><i class="far fa-eye"></i></a>
-                                <a href="#" class="vs-btn style4">Add To Cart</a>
-                            </div>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-content">
-                                <h3 class="product-title"><a class="text-inherit" href="shop-details.html">Massage Oil</a></h3>
-                                <div class="product-category">
-                                    <a href="shop.html">Spa</a>
-                                </div>
-                            </div>
-                            <span class="product-price">$18.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
 
     <!-- Blog Area -->
     

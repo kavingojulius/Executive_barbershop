@@ -12,8 +12,8 @@
                         <div class="header-links style-white">
                             <ul>
                                 <li class="d-none d-xxl-inline-block"><i class="far fa-map-marker-alt"></i> Lexo Petrol Station, next to Club Step Two, Embu</li>
-                                <li><i class="far fa-phone-alt"></i><a href="tel:+25632542598">(+256) 3254 2598</a></li>
-                                <li><i class="far fa-envelope"></i><a href="mailto:example@Wellnez.com">kings2023@gmail.com</a></li>
+                                <li><i class="far fa-phone-alt"></i><a href="tel:+254727656828">(+254) 727656828</a></li>
+                                <li><i class="far fa-envelope"></i><a href="https://mail.google.com/mail/?view=cm&fs=1&to=kings2023@gmail.com" target="_blank" class="text-inherit">kings2023@gmail.com</a></li>
                             </ul>
                         </div>
                     </div>
